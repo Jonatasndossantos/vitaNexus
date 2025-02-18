@@ -307,9 +307,6 @@
                     </div>
                 </div>
 
-                <div id="results" class="mt-4" style="display: none;">
-                    <!-- Results will be displayed here -->
-                </div>
             </div>
         </div>
     </div>

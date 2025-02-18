@@ -1,3 +1,12 @@
+## Preparando o Ambiente
+Ao clonar o repositorio certifique-se de estar na pasta correta e de um ```composer update and composer install```. Verifique o arquivo **.env** se nao estiver use o **.env.example** renomeie para .env e precisamos cria uma chave para o app de um ```php artisan key:generate``` e Lembrando que este codigo tambem usa o vite, coloque ```npm install and npm run build
+composer run dev```. Alem disso usamos o breeze, coloque ```php artisan breeze:install ```
+```php artisan migrate``` *ops: se der algum erro de* ```php artisan config:clear ``` Finalize com
+```npm run dev```
+E pronto, de um ```php artisan serve```
+
+---
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

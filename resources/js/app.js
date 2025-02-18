@@ -1,5 +1,7 @@
 import './bootstrap';
-import * as bootstrap from 'bootstrap';
 
-// Make bootstrap globally available
-window.bootstrap = bootstrap;
+import Alpine from 'alpinejs';
+
+window.Alpine = Alpine;
+
+Alpine.start();
