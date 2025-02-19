@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="results-card">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h4 class="mb-0">Seus Resultados</h4>
-                    <button class="btn btn-outline-primary" onclick="location.reload()">
+                    <button class="btn btn-outline-success" onclick="location.reload()">
                         <i class="bi bi-arrow-repeat me-2"></i>
                         Calcular Novamente
                     </button>
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="card h-100">
                             <div class="card-body text-center p-4">
                                 <div class="icon-wrapper mx-auto mb-3">
-                                    <i class="bi bi-graph-up text-primary fs-4"></i>
+                                    <i class="bi bi-graph-up text-success fs-4"></i>
                                 </div>
                                 <h5 class="card-title">IMC</h5>
                                 <h2 class="display-4 mb-2">${data.bmi}</h2>
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="card h-100">
                             <div class="card-body text-center p-4">
                                 <div class="icon-wrapper mx-auto mb-3">
-                                    <i class="bi bi-droplet text-primary fs-4"></i>
+                                    <i class="bi bi-droplet text-success fs-4"></i>
                                 </div>
                                 <h5 class="card-title">Água</h5>
                                 <h2 class="display-4 mb-2">${data.waterIntake}L</h2>
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="card h-100">
                             <div class="card-body text-center p-4">
                                 <div class="icon-wrapper mx-auto mb-3">
-                                    <i class="bi bi-calculator text-primary fs-4"></i>
+                                    <i class="bi bi-calculator text-success fs-4"></i>
                                 </div>
                                 <h5 class="card-title">Calorias</h5>
                                 <h2 class="display-4 mb-2">${data.calories}</h2>
