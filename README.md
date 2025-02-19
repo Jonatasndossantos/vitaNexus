@@ -1,9 +1,12 @@
 ## Preparando o Ambiente
-Ao clonar o repositorio certifique-se de estar na pasta correta e de um ```composer update and composer install```. Verifique o arquivo **.env** se nao estiver use o **.env.example** renomeie para .env e precisamos cria uma chave para o app de um ```php artisan key:generate``` e Lembrando que este codigo tambem usa o vite, coloque ```npm install and npm run build
-composer run dev```. Alem disso usamos o breeze, coloque ```php artisan breeze:install ```
-```php artisan migrate``` *ops: se der algum erro de* ```php artisan config:clear ``` Finalize com
-```npm run dev```
-E pronto, de um ```php artisan serve```
+Ao clonar o repositorio certifique-se de estar na pasta correta e de um ```composer update and composer install```. Verifique o arquivo **.env** se nao estiver use o **.env.example** renomeie para .env e precisamos cria uma chave para o app de um ```php artisan key:generate``` e Lembrando que este codigo tambem usa o vite, coloque ```npm install ``` ```npm run build```
+```composer run dev```. coloque 
+```php artisan migrate``` Finalize com 
+E pronto, de um ```php artisan serve```.
+
+*ops: se der algum erro de* ```php artisan config:clear ``` 
+*Alem disso usamos o breeze ops: se der algum erro de* ```php artisan breeze:install ``` 
+
 
 ---
 

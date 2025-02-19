@@ -1,15 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+    //Seleção de Elementos
     const form = document.getElementById('healthForm');
     const inputSection = document.getElementById('input-section');
     const resultsDiv = document.getElementById('results');
 
+    //Evento de Submissão do Formulário
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
         
+        //Coleta de Dados do Formulário
         const formData = new FormData(form);
         const token = document.querySelector('meta[name="csrf-token"]').content;
         
         try {
+            //Requisição Assíncrona
             const response = await fetch('/calculate-health', {
                 method: 'POST',
                 headers: {
@@ -19,11 +24,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: formData
             });
             
+            //Tratamento da Resposta
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || 'Erro na requisição');
             }
             
+            //Exibição dos Resultados
             const data = await response.json();
             displayResults(data);
             

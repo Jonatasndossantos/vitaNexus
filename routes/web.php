@@ -22,4 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+route::get('/cadastrar/salvar',[App\http\controllers\registrarAtividadeControler::class, 'store']);
+
 require __DIR__.'/auth.php';
