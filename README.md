@@ -112,17 +112,21 @@ public function show(string $id): View
 php artisan make:model modelUsuario
 <br>
 
-```
+```php
     use Illuminate\Database\Eloquent\Factories\HasFactory;
 ```
 <br>
-```
+```php
+
     use HasFactory;//Fatoração - Dividir
     protected $table = 'usuario'; //nome da tabela
+
 ```
 
 <br>
+
 ## Funcionalidades
+<br>
 Colocar os dados e salvar: CRUD basico
 Fazer calculos e mostrar para o usuario: Logica ja foi feita com pesquisa, só precisa salvar
 organizar para nao dar conflito: *ops parte mais dificil*
