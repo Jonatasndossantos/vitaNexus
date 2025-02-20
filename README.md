@@ -38,7 +38,7 @@ https://laravel.com/docs/11.x/migrations<br>
 php artisan make:migrate nome do banco<br>
 no arquivo criado crie a tabela e as colunas<br>
 
-```Schema::create('users', function (Blueprint $table) {
+``` Schema::create('users', function (Blueprint $table) {
     $table->id();
     $table->string('name');
     $table->string('email');
