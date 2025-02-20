@@ -43,7 +43,9 @@ no arquivo criado crie a tabela e as colunas<br>
     $table->string('name');
     $table->string('email');
     $table->timestamps();
-});```<br>
+});
+``` 
+<br>
 
 *ops o de excluir tmb: ```Schema::dropIfExists('products');```*<br>
 ```php artisan migrate``` para realmente criar a tabela.<br>
