@@ -16,6 +16,7 @@ class HealthCalculatorController extends Controller
     public function calculate(Request $request)
     {
         try {
+            //Validação dos Dados
             $validator = Validator::make($request->all(), [
                 'weight' => 'required|numeric|min:30|max:300',
                 'height' => 'required|numeric|min:100|max:250',
@@ -31,12 +32,42 @@ class HealthCalculatorController extends Controller
                 ], 422);
             }
 
+            //Cálculos de Saúde
             $validated = $validator->validated();
 
             $bmi = $this->calculateBMI($validated['weight'], $validated['height']);
             $waterIntake = $this->calculateWaterIntake($validated['weight']);
             $calories = $this->calculateCalories($validated);
 
+            // Salvar os dados no banco de dados
+            modelSaude::create([
+                'weight' => $validated['weight'],
+                'height' => $validated['height'],
+                'age' => $validated['age'],
+                'gender' => $validated['gender'],
+                'activityLevel' => $validated['activityLevel'],
+                'bmi' => round($bmi, 1),
+                'bmiCategory' => $this->getBMICategory($bmi)['category'],
+                'waterIntake' => round($waterIntake, 1),
+                'calories' => round($calories),
+                'macros' => json_encode([
+                    'protein' => [
+                        'min' => round($calories * 0.25 / 4),
+                        'max' => round($calories * 0.35 / 4)
+                    ],
+                    'carbs' => [
+                        'min' => round($calories * 0.45 / 4),
+                        'max' => round($calories * 0.65 / 4)
+                    ],
+                    'fats' => [
+                        'min' => round($calories * 0.20 / 9),
+                        'max' => round($calories * 0.35 / 9)
+                    ]
+                ])
+            ]);
+
+
+            //Retorno dos Resultados
             return response()->json([
                 'bmi' => round($bmi, 1),
                 'bmiCategory' => $this->getBMICategory($bmi),
