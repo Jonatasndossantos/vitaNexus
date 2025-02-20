@@ -39,10 +39,10 @@
                 <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
                     <header class="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
                         <div class="flex lg:justify-center lg:col-start-2">
-                            <img src="{{ url ('/assets/imagem/logo.png')}}" width="50" height="auto" alt="">
+                            <img src="{{ url ('/assets/imagem/logo.png')}}" width="40" height="auto" alt="">
                         </div>
                         @if (Route::has('login'))
-                            <nav class="-mx-3 flex flex-1 justify-end">
+                            <nav class="-mx-3 flex flex-1 justify-end" style="margin-top:10px;">
                                 @auth
                                     <a
                                         href="{{ url('/dashboard') }}"
@@ -72,30 +72,22 @@
                     </header>
 
 
-                    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-body-tertiary">
-    <div class="col-md-6 p-lg-5 mx-auto my-5">
-      <h1 class="display-3 fw-bold">Designed for engineers</h1>
-      <h3 class="fw-normal text-muted mb-3">Build anything you want with Aperture</h3>
-      <div class="d-flex gap-3 justify-content-center lead fw-normal">
-        <a class="icon-link" href="#">
-          Learn more
-          <svg class="bi"><use xlink:href="#chevron-right"/></svg>
-        </a>
-        <a class="icon-link" href="#">
-          Buy
-          <svg class="bi"><use xlink:href="#chevron-right"/></svg>
-        </a>
-      </div>
-    </div>
+
+   
+                          <video width="100%" height="auto" autoplay muted>
+                        <source src="{{ url ('/assets/imagem/video.mp4')}}" type="video/mp4">
+                        Your browser does not support the video tag.
+                      </video>
+   
     <div class="product-device shadow-sm d-none d-md-block"></div>
     <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
-  </div>
 
 
 
 
 
 
+  <br><br>
 
                     <!-- START THE FEATURETTES -->
 
@@ -103,11 +95,11 @@
 
 <div class="row featurette">
   <div class="col-md-7">
-    <h2 class="featurette-heading fw-normal lh-1">First featurette heading. <span class="text-body-secondary">It’ll blow your mind.</span></h2>
-    <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose here.</p>
+
+    <p class="lead">Cuidar da saúde é essencial para viver com qualidade e bem-estar. Ao adotar hábitos saudáveis, você fortalece o corpo e a mente, prevenindo doenças e garantindo mais energia para aproveitar a vida. <br> Não espere mais! <br> Dê o primeiro passo hoje: cuide de você, faça escolhas que promovam sua saúde e sinta a diferença. <br> Seu futuro começa agora!</p>
   </div>
   <div class="col-md-5">
-    <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
+<img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="{{ url ('/assets/imagem/imagem1.jpg')}}" width="500" height="500"  alt="">
   </div>
 </div>
 
@@ -115,11 +107,12 @@
 
 <div class="row featurette">
   <div class="col-md-7 order-md-2">
-    <h2 class="featurette-heading fw-normal lh-1">Oh yeah, it’s that good. <span class="text-body-secondary">See for yourself.</span></h2>
-    <p class="lead">Another featurette? Of course. More placeholder content here to give you an idea of how this layout would work with some actual real-world content in place.</p>
+   <p class="lead">Com o VitaNexus, cuidar da sua saúde ficou mais fácil e completo! Acompanhe seu IMC, calorias recomendadas, hidratação, pressão arterial e muito mais, tudo em um único lugar. Tenha acesso a lembretes personalizados para manter seus hábitos saudáveis em dia e alcançar seus objetivos de saúde com mais precisão. <br> Não perca mais tempo, faça login ou cadastre-se agora e comece a cuidar de você de maneira inteligente e prática!</p>
   </div>
-  <div class="col-md-5 order-md-1">
-    <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
+
+  <div class="col-md-5">
+<img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="{{ url ('/assets/imagem/imagem2.jpg')}}" width="500" height="500"  alt="">
+
   </div>
 </div>
 
@@ -127,12 +120,10 @@
 
 <div class="row featurette">
   <div class="col-md-7">
-    <h2 class="featurette-heading fw-normal lh-1">And lastly, this one. <span class="text-body-secondary">Checkmate.</span></h2>
-    <p class="lead">And yes, this is the last block of representative placeholder content. Again, not really intended to be actually read, simply here to give you a better view of what this would look like with some actual content. Your content.</p>
+   <p class="lead">No VitaNexus, você encontra dicas valiosas de nutrição, alimentação, saúde e exercícios para alcançar o seu melhor! Descubra como manter uma alimentação equilibrada, escolher os alimentos certos para seu corpo, e adotar hábitos saudáveis para uma vida plena. Com nossas orientações sobre exercícios físicos, você vai melhorar seu condicionamento e aumentar sua energia. <br> A saúde é um conjunto de escolhas, e no vitaNexus, te ajudamos a fazer as melhores!</p>
   </div>
   <div class="col-md-5">
-    <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-  </div>
+<img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="{{ url ('/assets/imagem/imagem3.jpg')}}" width="500" height="500"  alt="">
 </div>
 
 <hr class="featurette-divider">
