@@ -46,7 +46,7 @@ php artisan make:migrate nome do banco<br>
 
 no arquivo criado crie a tabela e as colunas<br>
 
-``` 
+```php
 Schema::create('* nome da tabela *', function (Blueprint $table) {
     $table->id(); //colunas
     $table->string('name');
@@ -70,7 +70,9 @@ https://laravel.com/docs/11.x/authentication#authenticating-users<br>
 php artisan make:controller nome do controlador<br>
 
 o professor ensinou assim:<br>
-``` 
+
+```php
+
 public function index(){
         $dados = modelAgenda::all(); //tras todos os dados da tabela
         return view('paginas.cadastrar')->With('dados',$dados);
@@ -85,18 +87,23 @@ public function index(){
 
         $model->save();//armazena
         return redirect('/cadastrar');
-    }//fim metodo requisicao de cadastro ```
+    }//fim metodo requisicao de cadastro
+
+```
+
 <br><br>
 O laravel da inicio com isso:
 <br>
 
-``` 
+```php
+
 public function show(string $id): View
     {
         return view('user.profile', [
             'user' => User::findOrFail($id)
         ]);
     } 
+
 ```
 <br><br>
 
@@ -104,13 +111,16 @@ public function show(string $id): View
 <br>
 php artisan make:model modelUsuario
 <br>
+
 ```
     use Illuminate\Database\Eloquent\Factories\HasFactory;
 ```
+<br>
 ```
     use HasFactory;//Fatoração - Dividir
     protected $table = 'usuario'; //nome da tabela
 ```
+
 <br>
 ## Funcionalidades
 Colocar os dados e salvar: CRUD basico
