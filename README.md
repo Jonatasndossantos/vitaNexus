@@ -1,12 +1,20 @@
 # OPS esta area esta em desenvolvimento desconsidere maluquices
 
 ## Preparando o Ambiente
-Ao clonar o repositorio certifique-se de estar na pasta correta e de um ```composer update and composer install```. Verifique o arquivo **.env** se nao estiver use o **.env.example** renomeie para .env e precisamos cria uma chave para o app de um ```php artisan key:generate``` e Lembrando que este codigo tambem usa o vite, coloque ```npm install ``` ```npm run build```
-```composer run dev```. coloque 
-```php artisan migrate``` Finalize com 
+Ao clonar o repositorio certifique-se de estar na pasta correta.<br>
+De um ```composer update and composer install```. <br>
+*if error: ```git config --global --add safe.directory C:/xampp/htdocs```* <br><br>
+
+Verifique o arquivo **.env** se nao estiver use o **.env.example** clone e renomeie para .env<br>
+Precisamos cria uma chave para o app de um ```php artisan key:generate``` <br>
+
+Lembrando que este codigo tambem usa o vite,<br> 
+Coloque ```npm install ``` ```npm run build``` ```composer run dev```. <br>
+coloque ```php artisan migrate```<br> 
+*if error* ```php artisan config:clear ```<br><br> 
 E pronto, de um ```php artisan serve```.
 
-*ops: se der algum erro de* ```php artisan config:clear ``` 
+
 *Alem disso usamos o breeze ops: se der algum erro de* ```php artisan breeze:install ``` 
 
 ---
