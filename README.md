@@ -26,37 +26,52 @@ usuario: Colocar meus dados e ver.
 desenvolvedor: Quero promover um bom conforto em meu site
 desenvolvedor: quero poder ser util dando funçoes sobre saude e bem estar.
 
-## Cadastro e Login 
+# Cadastro e Login 
 Criar pagina com form: example bootstrap   feito
 Criar logica de cadastro e login: CRUD basico, esta nas anotaçoes da aula do laravel
 
 ### crud basico
-form method Get action vinculado no web<br>
 
+### View
+https://laravel.com/docs/11.x/views
+<br>
+<form method="GET" action"vinculado no web">
+<br>
+
+### migration
 
 https://laravel.com/docs/11.x/migrations<br>
+
 php artisan make:migrate nome do banco<br>
+
 no arquivo criado crie a tabela e as colunas<br>
 
-``` Schema::create('users', function (Blueprint $table) {
-    $table->id();
+``` 
+Schema::create('* nome da tabela *', function (Blueprint $table) {
+    $table->id(); //colunas
     $table->string('name');
     $table->string('email');
-    $table->timestamps();
+    $table->timestamps(); //data
 });
 ``` 
 <br>
 
-*ops o de excluir tmb: ```Schema::dropIfExists('products');```*<br>
-```php artisan migrate``` para realmente criar a tabela.<br>
+*ops o de excluir tmb: ```Schema::dropIfExists('products');```
+*<br>
+```php artisan migrate``` 
+<br>
+Para realmente criar a tabela.<br>
 verifique no sqlite. <br>
 <br>
 
-
+### controller
 https://laravel.com/docs/11.x/authentication#authenticating-users<br>
+
 php artisan make:controller nome do controlador<br>
+
 o professor ensinou assim:<br>
-``` public function index(){
+``` 
+public function index(){
         $dados = modelAgenda::all(); //tras todos os dados da tabela
         return view('paginas.cadastrar')->With('dados',$dados);
     }//fim do método -retornar dados
@@ -70,21 +85,33 @@ o professor ensinou assim:<br>
 
         $model->save();//armazena
         return redirect('/cadastrar');
-    }//fim metodo requisicao de cadastro ```<br>
-    o laravel da inicio com isso:<br>
-``` public function show(string $id): View
+    }//fim metodo requisicao de cadastro ```
+<br><br>
+O laravel da inicio com isso:
+<br>
+
+``` 
+public function show(string $id): View
     {
         return view('user.profile', [
             'user' => User::findOrFail($id)
         ]);
-    } ``` <br>
+    } 
+```
+<br><br>
+
+### model
+<br>
 php artisan make:model modelUsuario
-
+<br>
+```
     use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+```
+```
     use HasFactory;//Fatoração - Dividir
     protected $table = 'usuario'; //nome da tabela
-
+```
+<br>
 ## Funcionalidades
 Colocar os dados e salvar: CRUD basico
 Fazer calculos e mostrar para o usuario: Logica ja foi feita com pesquisa, só precisa salvar
