@@ -10,6 +10,10 @@ Route::get('/', function () {
 Route::get('/t', function () {
     return view('tdashboard');
 });
+Route::get('/bemEstar', function () {
+    return view('bemEstar');
+})->name('bemEstar');
+
 
 Route::middleware(['web'])->group(function () {
     Route::get('/dashboard', [HealthCalculatorController::class, 'index'])->name('dashboard');
@@ -23,3 +27,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+

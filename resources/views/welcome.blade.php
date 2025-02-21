@@ -55,7 +55,7 @@
                                         href="{{ route('login') }}"
                                         class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#05664F] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                                     >
-                                        Log in
+                                        Login
                                     </a>
 
                                     @if (Route::has('register'))
@@ -63,7 +63,7 @@
                                             href="{{ route('register') }}"
                                             class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#05664F] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                                         >
-                                            Register
+                                            Cadastro
                                         </a>
                                     @endif
                                 @endauth
@@ -74,7 +74,7 @@
 
 
    
-                          <video width="100%" height="auto" autoplay muted>
+                          <video width="100%" height="auto" autoplay muted style="border-radius:20px;">
                         <source src="{{ url ('/assets/imagem/video.mp4')}}" type="video/mp4">
                         Your browser does not support the video tag.
                       </video>
@@ -99,7 +99,7 @@
     <p class="lead">Cuidar da saúde é essencial para viver com qualidade e bem-estar. Ao adotar hábitos saudáveis, você fortalece o corpo e a mente, prevenindo doenças e garantindo mais energia para aproveitar a vida. <br> Não espere mais! <br> Dê o primeiro passo hoje: cuide de você, faça escolhas que promovam sua saúde e sinta a diferença. <br> Seu futuro começa agora!</p>
   </div>
   <div class="col-md-5">
-<img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="{{ url ('/assets/imagem/imagem1.jpg')}}" width="500" height="500"  alt="">
+<img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="{{ url ('/assets/imagem/imagem1.jpg')}}" width="500" height="500"  alt="" style="border-radius:20px;">
   </div>
 </div>
 
@@ -111,7 +111,7 @@
   </div>
 
   <div class="col-md-5">
-<img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="{{ url ('/assets/imagem/imagem2.jpg')}}" width="500" height="500"  alt="">
+<img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="{{ url ('/assets/imagem/imagem2.jpg')}}" width="500" height="500"  alt="" style="border-radius:20px;">
 
   </div>
 </div>
@@ -123,7 +123,7 @@
    <p class="lead">No VitaNexus, você encontra dicas valiosas de nutrição, alimentação, saúde e exercícios para alcançar o seu melhor! Descubra como manter uma alimentação equilibrada, escolher os alimentos certos para seu corpo, e adotar hábitos saudáveis para uma vida plena. Com nossas orientações sobre exercícios físicos, você vai melhorar seu condicionamento e aumentar sua energia. <br> A saúde é um conjunto de escolhas, e no vitaNexus, te ajudamos a fazer as melhores!</p>
   </div>
   <div class="col-md-5">
-<img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="{{ url ('/assets/imagem/imagem3.jpg')}}" width="500" height="500"  alt="">
+<img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="{{ url ('/assets/imagem/imagem3.jpg')}}" width="500" height="500"  alt="" style="border-radius:20px;">
 </div>
 
 <hr class="featurette-divider">
@@ -132,10 +132,54 @@
 
 
 
+
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <div class="col-md-4 d-flex align-items-center">
+      <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+        <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+      </a>
+      <span class="mb-3 mb-md-0 text-body-secondary">© 2025 VitaNexus</span>
+    </div>
+
+    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+    @if (Route::has('login'))
+                            <nav class="-mx-3 flex flex-1 justify-end" style="margin-top:10px;">
+                                @auth
+                                    <a
+                                        href="{{ url('/dashboard') }}"
+                                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#05664F] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                    >
+                                        Dashboard
+                                    </a>
+                                @else
+                                    <a
+                                        href="{{ route('login') }}"
+                                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#05664F] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                    > <button type="button" class="btn btn-outline-success">
+                                        Faça login     
+                                        </button></a>
+
+
+                                    @if (Route::has('register'))
+                                        <a
+                                            href="{{ route('register') }}"
+                                            class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#05664F] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                        > <button type="button" class="btn btn-outline-success">
+                                         Não tem uma conta? Cadastre-se
+                                         </button></a>
+                                    @endif
+                                @endauth
+                            </nav>
+                        @endif</ul>
+  </footer>
+
                    
                 </div>
             </div>
         </div>
+
+
+
 
 
 
