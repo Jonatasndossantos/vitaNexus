@@ -15,32 +15,42 @@ document.addEventListener('DOMContentLoaded', function() {
         
         try {
             //Requisição Assíncrona
-            const response = await fetch('/calculate-health', {
+            const response = await fetch('/health/store', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': token,
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: formData
+                body: JSON.stringify(Object.fromEntries(formData))
             });
             
             //Tratamento da Resposta
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Erro na requisição');
+                throw new Error(errorData.message || errorData.error || 'Erro na requisição');
             }
             
             //Exibição dos Resultados
             const data = await response.json();
+            
+            // Verifica se os dados necessários estão presentes
+            if (!data.bmi || !data.waterIntake || !data.calories || !data.macros) {
+                throw new Error('Dados incompletos recebidos do servidor');
+            }
+            
             displayResults(data);
             
             // Oculta a seção de entrada e mostra os resultados com animação
             inputSection.style.display = 'none';
             resultsDiv.style.display = 'block';
             
+            // Scroll suave até os resultados
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+            
         } catch (error) {
-            console.error('Erro:', error);
-            alert('Erro ao processar o cálculo. Por favor, tente novamente.');
+            console.error('Erro detalhado:', error);
+            alert(`Erro ao processar o cálculo: ${error.message}`);
         }
     });
 

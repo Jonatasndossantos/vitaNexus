@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\HealthCalculatorController;
 
 class HealthCalculatorController extends Controller
 {
     public function index()
     {
-        return view('dashboard');
+        return view('home');
     }
+    use HealthCalculatorController;
 
     public function calculate(Request $request)
     {
@@ -39,32 +41,7 @@ class HealthCalculatorController extends Controller
             $waterIntake = $this->calculateWaterIntake($validated['weight']);
             $calories = $this->calculateCalories($validated);
 
-            // Salvar os dados no banco de dados
-            modelSaude::create([
-                'weight' => $validated['weight'],
-                'height' => $validated['height'],
-                'age' => $validated['age'],
-                'gender' => $validated['gender'],
-                'activityLevel' => $validated['activityLevel'],
-                'bmi' => round($bmi, 1),
-                'bmiCategory' => $this->getBMICategory($bmi)['category'],
-                'waterIntake' => round($waterIntake, 1),
-                'calories' => round($calories),
-                'macros' => json_encode([
-                    'protein' => [
-                        'min' => round($calories * 0.25 / 4),
-                        'max' => round($calories * 0.35 / 4)
-                    ],
-                    'carbs' => [
-                        'min' => round($calories * 0.45 / 4),
-                        'max' => round($calories * 0.65 / 4)
-                    ],
-                    'fats' => [
-                        'min' => round($calories * 0.20 / 9),
-                        'max' => round($calories * 0.35 / 9)
-                    ]
-                ])
-            ]);
+            
 
 
             //Retorno dos Resultados

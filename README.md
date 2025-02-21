@@ -38,6 +38,8 @@ organizar para nao dar conflito: *ops parte mais dificil*
 ## Beleza do site
 Cores css ou bootstrap: ja esta sendo feito pela nicole
 
+182e7794-1d01-4270-bc60-a7dc6faf5a14
+
 ---
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
