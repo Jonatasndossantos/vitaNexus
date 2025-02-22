@@ -1,5 +1,13 @@
 <x-app-layout>
     <div class="container py-5">
+        <!-- Alerta de Sucesso -->
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <div class="row justify-content-center">
             <div class="col-lg-11">
                 <!-- Cabeçalho da Página -->
@@ -18,20 +26,23 @@
                     <div class="card-header bg-success bg-opacity-10 border-success">
                         <div class="row align-items-center">
                             <div class="col">
-                                <div class="input-group">
-                                    <span class="input-group-text border-success">
-                                        <i class="bi bi-search text-success"></i>
-                                    </span>
-                                    <input type="text" id="searchTable" class="form-control border-success" placeholder="Buscar registros...">
-                                </div>
+                                <form action="{{ route('history') }}" method="GET" class="d-flex">
+                                    <div class="input-group">
+                                        <span class="input-group-text border-success">
+                                            <i class="bi bi-search text-success"></i>
+                                        </span>
+                                        <input type="text" name="search" class="form-control border-success" 
+                                               placeholder="Buscar registros..." value="{{ request('search') }}">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="bi bi-search me-1"></i>Buscar
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                             <div class="col-auto">
                                 <div class="btn-group">
-                                    <button class="btn btn-outline-success">
+                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#filterModal">
                                         <i class="bi bi-funnel me-1"></i>Filtrar
-                                    </button>
-                                    <button class="btn btn-outline-success">
-                                        <i class="bi bi-download me-1"></i>Exportar
                                     </button>
                                 </div>
                             </div>
@@ -75,23 +86,17 @@
                                                 {!! $data['healthStatus'] !!}
                                             </td>
                                             <td class="text-end px-4">
-                                                <div class="btn-group">
-                                                    <a href="{{ route('health.show', $data['id']) }}" 
-                                                       class="btn btn-sm btn-outline-success"
-                                                       data-bs-toggle="tooltip"
-                                                       title="Ver detalhes">
-                                                        <i class="bi bi-eye"></i>
+                                                <div class="btn-group btn-group-sm">
+                                                    <a href="#" 
+                                                       class="btn btn-outline-primary"
+                                                       data-bs-toggle="modal" 
+                                                       data-bs-target="#editModal{{ $data['id'] }}">
+                                                        <i class="bi bi-pencil"></i>
                                                     </a>
-                                                    <form action="{{ route('health.destroy', $data['id']) }}" 
-                                                          method="POST" 
-                                                          class="d-inline">
+                                                    <form action="{{ route('delete', $data['id']) }}" method="POST" style="display:inline;">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" 
-                                                                class="btn btn-sm btn-outline-danger"
-                                                                data-bs-toggle="tooltip"
-                                                                title="Excluir registro"
-                                                                onclick="return confirm('Tem certeza que deseja excluir este registro?')">
+                                                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Tem certeza que deseja excluir?')">
                                                             <i class="bi bi-trash"></i>
                                                         </button>
                                                     </form>
@@ -122,59 +127,161 @@
         </div>
     </div>
     <!-- Exibição dos dados salvos -->
-    @if(session('success'))
-                    <div class="alert alert-success mt-4">
-                        {{ session('success') }}
-                        @if(session('imc'))
-                            <br>Seu IMC é: {{ session('imc') }}
-                        @endif
+
+    <!-- Modal de Filtros -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success bg-opacity-10">
+                    <h5 class="modal-title" id="filterModalLabel">Filtrar Registros</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('history') }}" method="GET">
+                    <div class="modal-body">
+                        <!-- Período -->
+                        <div class="mb-3">
+                            <label class="form-label">Período</label>
+                            <div class="row g-2">
+                                <div class="col">
+                                    <input type="date" name="date_start" class="form-control" 
+                                           value="{{ request('date_start') }}" placeholder="Data Inicial">
+                                </div>
+                                <div class="col">
+                                    <input type="date" name="date_end" class="form-control" 
+                                           value="{{ request('date_end') }}" placeholder="Data Final">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Categoria IMC -->
+                        <div class="mb-3">
+                            <label class="form-label">Categoria IMC</label>
+                            <select name="bmi_category" class="form-select">
+                                <option value="">Todas as categorias</option>
+                                <option value="abaixo" {{ request('bmi_category') == 'abaixo' ? 'selected' : '' }}>Abaixo do peso</option>
+                                <option value="normal" {{ request('bmi_category') == 'normal' ? 'selected' : '' }}>Peso normal</option>
+                                <option value="sobrepeso" {{ request('bmi_category') == 'sobrepeso' ? 'selected' : '' }}>Sobrepeso</option>
+                                <option value="obesidade" {{ request('bmi_category') == 'obesidade' ? 'selected' : '' }}>Obesidade</option>
+                            </select>
+                        </div>
+
+                        <!-- Pressão Arterial -->
+                        <div class="mb-3">
+                            <label class="form-label">Pressão Arterial</label>
+                            <select name="pressure_category" class="form-select">
+                                <option value="">Todas as categorias</option>
+                                <option value="normal" {{ request('pressure_category') == 'normal' ? 'selected' : '' }}>Normal</option>
+                                <option value="elevated" {{ request('pressure_category') == 'elevated' ? 'selected' : '' }}>Elevada</option>
+                                <option value="high" {{ request('pressure_category') == 'high' ? 'selected' : '' }}>Alta</option>
+                            </select>
+                        </div>
+
+                        <!-- Fatores de Risco -->
+                        <div class="mb-3">
+                            <label class="form-label">Fatores de Risco</label>
+                            <div class="form-check">
+                                <input type="checkbox" name="risk_factors[]" value="tabagismo" 
+                                       class="form-check-input" {{ in_array('tabagismo', request('risk_factors', [])) ? 'checked' : '' }}>
+                                <label class="form-check-label">Tabagismo</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="risk_factors[]" value="alcoolismo" 
+                                       class="form-check-input" {{ in_array('alcoolismo', request('risk_factors', [])) ? 'checked' : '' }}>
+                                <label class="form-check-label">Alcoolismo</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="risk_factors[]" value="alimentacao_nao_saudavel" 
+                                       class="form-check-input" {{ in_array('alimentacao_nao_saudavel', request('risk_factors', [])) ? 'checked' : '' }}>
+                                <label class="form-check-label">Alimentação não saudável</label>
+                            </div>
+                        </div>
                     </div>
-                @endif
+                    <div class="modal-footer">
+                        <a href="{{ route('history') }}" class="btn btn-outline-secondary">Limpar Filtros</a>
+                        <button type="submit" class="btn btn-success">Aplicar Filtros</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-    
+    <!-- Modal de Edição para cada registro -->
+    @foreach($healthData as $data)
+        <div class="modal fade" id="editModal{{ $data['id'] }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary bg-opacity-10">
+                        <h5 class="modal-title">Editar Registro de {{ $data['date'] }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('update', $data['id']) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Peso (kg)</label>
+                                <input type="number" step="0.1" name="weight" 
+                                       class="form-control" required 
+                                       value="{{ $data['weight'] }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Altura (cm)</label>
+                                <input type="number" step="0.1" name="height" 
+                                       class="form-control" required 
+                                       value="{{ $data['height'] }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Pressão Arterial</label>
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="number" name="sistolica" 
+                                               class="form-control" placeholder="Sistólica" 
+                                               required value="{{ $data['sistolica'] }}">
+                                    </div>
+                                    <div class="col">
+                                        <input type="number" name="diastolica" 
+                                               class="form-control" placeholder="Diastólica" 
+                                               required value="{{ $data['diastolica'] }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nível de Atividade</label>
+                                <select name="activity_level" class="form-select" required>
+                                    <option value="sedentary" {{ $data['activity_level'] == 'sedentary' ? 'selected' : '' }}>Sedentário</option>
+                                    <option value="light" {{ $data['activity_level'] == 'light' ? 'selected' : '' }}>Leve</option>
+                                    <option value="moderate" {{ $data['activity_level'] == 'moderate' ? 'selected' : '' }}>Moderado</option>
+                                    <option value="active" {{ $data['activity_level'] == 'active' ? 'selected' : '' }}>Ativo</option>
+                                    <option value="extra_active" {{ $data['activity_level'] == 'extra_active' ? 'selected' : '' }}>Muito Ativo</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Fatores de Risco</label>
+                                <div class="form-check">
+                                    <input type="checkbox" name="tabagismo" value="1" 
+                                           class="form-check-input" {{ $data['tabagismo'] ? 'checked' : '' }}>
+                                    <label class="form-check-label">Tabagismo</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="alcoolismo" value="1" 
+                                           class="form-check-input" {{ $data['alcoolismo'] ? 'checked' : '' }}>
+                                    <label class="form-check-label">Alcoolismo</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="alimentacao_nao_saudavel" value="1" 
+                                           class="form-check-input" {{ $data['alimentacao_nao_saudavel'] ? 'checked' : '' }}>
+                                    <label class="form-check-label">Alimentação não saudável</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
 
-    @push('scripts')
-    <script>
-        // Ativar tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        })
-
-        // Busca na tabela
-        document.getElementById('searchTable').addEventListener('keyup', function() {
-            var searchText = this.value.toLowerCase();
-            var table = document.querySelector('table');
-            var rows = table.getElementsByTagName('tr');
-
-            for (var i = 1; i < rows.length; i++) {
-                var showRow = false;
-                var cells = rows[i].getElementsByTagName('td');
-                
-                for (var j = 0; j < cells.length; j++) {
-                    if (cells[j].textContent.toLowerCase().indexOf(searchText) > -1) {
-                        showRow = true;
-                        break;
-                    }
-                }
-                
-                rows[i].style.display = showRow ? '' : 'none';
-            }
-        });
-    </script>
-    @endpush
-
-    @push('styles')
-    <style>
-        .table > :not(caption) > * > * {
-            padding: 1rem 0.5rem;
-        }
-        .badge {
-            padding: 0.5em 0.8em;
-        }
-        .btn-group .btn {
-            padding: 0.25rem 0.5rem;
-        }
-    </style>
-    @endpush
 </x-app-layout>

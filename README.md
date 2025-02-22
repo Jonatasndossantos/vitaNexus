@@ -17,6 +17,114 @@ E pronto, de um ```php artisan serve```.
 
 *Alem disso usamos o breeze ops: se der algum erro de* ```php artisan breeze:install ``` 
 
+
+# Saúde em Foco - Sistema de Monitoramento de Saúde
+
+## 📋 Sobre o Projeto
+Saúde em Foco é uma aplicação web desenvolvida em Laravel que permite aos usuários monitorar diversos aspectos de sua saúde, incluindo:
+- Cálculo de IMC (Índice de Massa Corporal)
+- Monitoramento de hidratação
+- Cálculo de necessidades calóricas
+- Acompanhamento de pressão arterial
+- Registro de hábitos de saúde
+
+## 🚀 Tecnologias Utilizadas
+- Laravel 10.x
+- PHP 8.x
+- MySQL
+- Bootstrap 5
+- Alpine.js
+- Vite
+
+## 💻 Pré-requisitos
+- PHP >= 8.1
+- Composer
+- Node.js e NPM
+- MySQL
+
+## 🔧 Instalação e Configuração
+
+1. Clone o repositório:
+```bash
+git clone [url-do-repositorio]
+cd [nome-do-projeto]
+```
+
+2. Instale as dependências do PHP:
+```bash
+composer install
+composer update
+```
+
+
+3. Instale as dependências do Node:
+```bash
+npm install
+```
+
+4. Configure o ambiente:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+5. Configure o banco de dados no arquivo .env:
+```php
+DB_CONNECTION=sqlite
+#DB_HOST=127.0.0.1
+#DB_PORT=3306
+#DB_DATABASE=seu_banco_de_dados
+#DB_USERNAME=seu_usuario
+#DB_PASSWORD=sua_senha
+```
+
+6. Execute as migrações:
+```bash
+php artisan migrate
+```
+
+7. Compile os assets:
+```bash
+npm run build
+npm run dev
+```
+* ops: voce nao podera mais escrever se manter no mesmo terminal, crie outro para continuar*
+
+8. Inicie o servidor:
+```bash
+php artisan serve
+```
+
+
+## 🔐 Autenticação
+O sistema utiliza o Laravel Breeze para autenticação, oferecendo:
+- Registro de usuários
+- Login
+- Recuperação de senha
+- Verificação de email
+
+## 📊 Funcionalidades Principais
+- Cálculo automático de IMC
+- Recomendações personalizadas de hidratação
+- Cálculo de necessidades calóricas baseado em diversos fatores
+- Histórico de medições
+- Dashboard personalizado
+- Monitoramento de pressão arterial
+- Registro de hábitos de saúde
+
+## 🤝 Contribuindo
+Contribuições são sempre bem-vindas! Para contribuir:
+
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📝 Licença
+Este projeto está sob a licença de JonatasNdosSantos. Veja o arquivo LICENSE para mais detalhes.
+
+
 ---
 ## Historia
 Usuario: Ao entrar quero colcoar meus dados normais para contato e facilitação de proximo acesso

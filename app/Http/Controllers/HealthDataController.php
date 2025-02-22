@@ -40,13 +40,26 @@ class HealthDataController extends Controller
                 'fats' => [
                     'min' => round($calories * 0.20 / 9),
                     'max' => round($calories * 0.35 / 9)
-                ]
-            ];
+                    ]
+                ];
+            }
+            
+            return view('home', compact('lastHealthData', 'showForm'));
         }
-
-        return view('home', compact('lastHealthData', 'showForm'));
+        
+    public function show($id)
+    {
+        $healthData = HealthData::findOrFail($id);
+        return view('health.show', compact('healthData'));
     }
+    
+    public function destroy($id)
+    {
+        $healthData = auth()->user()->healthData()->findOrFail($id);
+        $healthData->delete();
 
+        return redirect()->route('history')->with('success', 'Registro excluído com sucesso!');
+    }
     public function store(Request $request)
     {
         try {
@@ -152,49 +165,8 @@ class HealthDataController extends Controller
         return 'Obesidade Grau III';
     }
 
-    public function show($id)
-    {
-        $healthData = HealthData::findOrFail($id);
-        return view('health.show', compact('healthData'));
-    }
 
-    public function destroy($id)
-    {
-        $healthData = HealthData::findOrFail($id);
-        $healthData->delete();
-        return redirect()->route('home')->with('success', 'Registro excluído com sucesso!');
-    }
-
-    public function history()
-    {
-        $healthData = auth()->user()->healthData()
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function($data) {
-                $bmi = $this->calculateIMC($data->weight, $data->height);
-                return [
-                    'id' => $data->id,
-                    'date' => $data->created_at->format('d/m/Y'),
-                    'weight' => $data->weight,
-                    'height' => $data->height,
-                    'bmi' => round($bmi, 1),
-                    'bmiCategory' => $this->getBMICategory($bmi),
-                    'bmiClass' => $this->getBMIClass($bmi),
-                    'sistolica' => $data->sistolica,
-                    'diastolica' => $data->diastolica,
-                    'age' => $data->age,
-                    'gender' => $data->gender,
-                    'activity_level' => $data->activity_level,
-                    'pressureClass' => $this->getPressureClass($data->sistolica, $data->diastolica),
-                    'healthStatus' => $this->getHealthStatus($data),
-               
-                ];
-            });
-
-        return view('history', compact('healthData'));
-    }
-
-
+    
     private function getBMIClass($bmi) {
         if ($bmi < 18.5) return 'warning';
         if ($bmi < 24.9) return 'success';
@@ -222,5 +194,133 @@ class HealthDataController extends Controller
         } else {
             return '<i class="bi bi-emoji-frown text-danger" data-bs-toggle="tooltip" title="Necessita cuidados"></i>';
         }
+    }
+
+    public function history(Request $request)
+    {
+        $query = auth()->user()->healthData()->orderBy('created_at', 'desc');
+
+        // Aplicar busca
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('weight', 'LIKE', "%{$search}%")
+                  ->orWhere('height', 'LIKE', "%{$search}%")
+                  ->orWhere('create_at', 'LIKE', "%{$search}%")
+                  ->orWhere('sistolica', 'LIKE', "%{$search}%")
+                  ->orWhere('diastolica', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Aplicar filtros de data
+        if ($request->filled('date_start')) {
+            $query->whereDate('created_at', '>=', $request->date_start);
+        }
+        if ($request->filled('date_end')) {
+            $query->whereDate('created_at', '<=', $request->date_end);
+        }
+
+        // Aplicar filtro de IMC
+        if ($request->filled('bmi_category')) {
+            $query->where(function($q) use ($request) {
+                switch($request->bmi_category) {
+                    case 'abaixo':
+                        $q->whereRaw('(weight / POWER(height/100, 2)) < 18.5');
+                        break;
+                    case 'normal':
+                        $q->whereRaw('(weight / POWER(height/100, 2)) BETWEEN 18.5 AND 24.9');
+                        break;
+                    case 'sobrepeso':
+                        $q->whereRaw('(weight / POWER(height/100, 2)) BETWEEN 25 AND 29.9');
+                        break;
+                    case 'obesidade':
+                        $q->whereRaw('(weight / POWER(height/100, 2)) >= 30');
+                        break;
+                }
+            });
+        }
+
+        // Filtro de Pressão Arterial
+        if ($request->filled('pressure_category')) {
+            switch($request->pressure_category) {
+                case 'normal':
+                    $query->where('sistolica', '<', 120)
+                          ->where('diastolica', '<', 80);
+                    break;
+                case 'elevated':
+                    $query->where('sistolica', '>=', 120)
+                          ->where('sistolica', '<', 130)
+                          ->where('diastolica', '<', 80);
+                    break;
+                case 'high':
+                    $query->where(function($q) {
+                        $q->where('sistolica', '>=', 130)
+                          ->orWhere('diastolica', '>=', 80);
+                    });
+                    break;
+            }
+        }
+
+        // Filtro de Fatores de Risco
+        if ($request->filled('risk_factors')) {
+            foreach ($request->risk_factors as $factor) {
+                $query->where($factor, true);
+            }
+        }
+
+        $healthData = $query->get()->map(function($data) {
+            $bmi = $this->calculateIMC($data->weight, $data->height);
+            return [
+                'id' => $data->id,
+                'date' => $data->created_at->format('d/m/Y'),
+                'weight' => $data->weight,
+                'height' => $data->height,
+                'bmi' => round($bmi, 1),
+                'bmiCategory' => $this->getBMICategory($bmi),
+                'bmiClass' => $this->getBMIClass($bmi),
+                'sistolica' => $data->sistolica,
+                'diastolica' => $data->diastolica,
+                'pressureClass' => $this->getPressureClass($data->sistolica, $data->diastolica),
+                'healthStatus' => $this->getHealthStatus($data),
+                'activity_level' => $data->activity_level,
+                'tabagismo' => $data->tabagismo,
+                'alcoolismo' => $data->alcoolismo,
+                'alimentacao_nao_saudavel' => $data->alimentacao_nao_saudavel,
+            ];
+        });
+
+        return view('history', compact('healthData'));
+    }
+
+    public function edit($id)
+    {
+        $healthData = auth()->user()->healthData()->findOrFail($id);
+        return view('edit', compact('healthData'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $healthData = auth()->user()->healthData()->findOrFail($id);
+        
+        $validated = $request->validate([
+            'weight' => 'required|numeric|min:0',
+            'height' => 'required|numeric|min:0',
+            'sistolica' => 'required|numeric|min:0',
+            'diastolica' => 'required|numeric|min:0',
+            'activity_level' => 'required|string',
+            'tabagismo' => 'nullable|boolean',
+            'alcoolismo' => 'nullable|boolean',
+            'alimentacao_nao_saudavel' => 'nullable|boolean',
+        ]);
+
+        // Tratar checkboxes não marcados
+        $validated['tabagismo'] = $request->has('tabagismo');
+        $validated['alcoolismo'] = $request->has('alcoolismo');
+        $validated['alimentacao_nao_saudavel'] = $request->has('alimentacao_nao_saudavel');
+
+        $healthData->update($validated);
+
+        return redirect()->route('history')
+            ->with('success', 'Registro atualizado com sucesso!');
     }
 }

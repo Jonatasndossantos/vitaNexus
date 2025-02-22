@@ -33,8 +33,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/health/{id}', [HealthDataController::class, 'destroy'])->name('health.destroy');
 
     Route::get('/history', [HealthDataController::class, 'history'])->name('history');
+    Route::get('/edit/{id}', [HealthDataController::class, 'edit'])->name('edit');
+    Route::put('/update/{id}', [HealthDataController::class, 'update'])->name('update');
 
     Route::get('/health/toggle-form', [HealthDataController::class, 'toggleForm'])->name('toggleForm');
+
+    Route::delete('/delete/{id}', [HealthDataController::class, 'destroy'])->name('delete');
 
 });
 
