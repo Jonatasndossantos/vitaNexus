@@ -5,17 +5,47 @@ namespace App\Http\Controllers;
 use App\Models\HealthData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Traits\HealthCalculatorController;
 
 class HealthDataController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $healthData = auth()->user()->healthData()->latest()->get();
-        return view('home', compact('healthData'));
-    }
+        $user = auth()->user();
+        $lastHealthData = $user->healthData()->latest()->first();
+        
+        // Pega o parâmetro da URL ou usa false como padrão
+        $showForm = $request->query('form', false);
 
-    use HealthCalculatorController;
+        if ($lastHealthData) {
+            // Calcular todos os dados necessários
+            $bmi = $this->calculateIMC($lastHealthData->weight, $lastHealthData->height);
+            $waterIntake = $this->calculateWaterIntake($lastHealthData->weight);
+            $calories = $this->calculateCalories($lastHealthData->toArray());
+
+            // Adicionar propriedades calculadas ao objeto
+            $lastHealthData->bmi = round($bmi, 1);
+            $lastHealthData->bmiCategory = $this->getBMICategory($bmi);
+            $lastHealthData->bmiClass = $this->getBMIClass($bmi);
+            $lastHealthData->waterIntake = round($waterIntake, 1);
+            $lastHealthData->calories = round($calories);
+            $lastHealthData->macros = [
+                'protein' => [
+                    'min' => round($calories * 0.25 / 4),
+                    'max' => round($calories * 0.35 / 4)
+                ],
+                'carbs' => [
+                    'min' => round($calories * 0.45 / 4),
+                    'max' => round($calories * 0.65 / 4)
+                ],
+                'fats' => [
+                    'min' => round($calories * 0.20 / 9),
+                    'max' => round($calories * 0.35 / 9)
+                ]
+            ];
+        }
+
+        return view('home', compact('lastHealthData', 'showForm'));
+    }
 
     public function store(Request $request)
     {
@@ -41,6 +71,7 @@ class HealthDataController extends Controller
             // Salvar dados
             $healthData = new HealthData();
             $healthData->user_id = auth()->id();
+
             $healthData->weight = $request->weight;
             $healthData->height = $request->height;
             $healthData->age = $request->age;
@@ -48,6 +79,7 @@ class HealthDataController extends Controller
             $healthData->sistolica = $request->sistolica;
             $healthData->diastolica = $request->diastolica;
             $healthData->activity_level = $request->activity_level;
+
             $healthData->tabagismo = $request->has('tabagismo');
             $healthData->alcoolismo = $request->has('alcoolismo');
             $healthData->alimentacao_nao_saudavel = $request->has('alimentacao_nao_saudavel');
@@ -57,48 +89,67 @@ class HealthDataController extends Controller
             $healthData->save();
 
             // Calcular resultados
-            $bmi = $this->calculateBMI($request->weight, $request->height);
+            $bmi = $this->calculateIMC($request->weight, $request->height);
             $waterIntake = $this->calculateWaterIntake($request->weight);
             $calories = $this->calculateCalories($request->all());
 
-            return response()->json([
-                'success' => true,
-                'bmi' => round($bmi, 1),
-                'bmiCategory' => $this->getBMICategory($bmi),
-                'waterIntake' => round($waterIntake, 1),
-                'calories' => round($calories),
-                'macros' => [
-                    'protein' => [
-                        'min' => round($calories * 0.25 / 4),
-                        'max' => round($calories * 0.35 / 4)
-                    ],
-                    'carbs' => [
-                        'min' => round($calories * 0.45 / 4),
-                        'max' => round($calories * 0.65 / 4)
-                    ],
-                    'fats' => [
-                        'min' => round($calories * 0.20 / 9),
-                        'max' => round($calories * 0.35 / 9)
-                    ]
-                ]
+            return redirect()->route('home')->with('success', 'Dados salvos com sucesso!');
+
+        } catch (\Exception $e) {
+            \Log::error('Erro ao salvar dados:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
-
-    } catch (\Exception $e) {
-        \Log::error('Erro ao salvar dados:', [
-            'message' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-
-        return redirect()->back()
-            ->withInput()
-            ->withErrors(['error' => 'Erro ao salvar os dados: ' . $e->getMessage()]);
-    }
+            
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Erro ao salvar os dados: ' . $e->getMessage()]);
+        }
     }
 
     private function calculateIMC($weight, $height)
     {
         $heightInMeters = $height / 100;
         return round($weight / ($heightInMeters * $heightInMeters), 2);
+    }
+
+    private function calculateWaterIntake($weight)
+    {
+        // Cálculo básico: 35ml por kg de peso corporal
+        return $weight * 35;
+    }
+
+    private function calculateCalories($data)
+    {
+        // Fórmula de Harris-Benedict revisada
+        $bmr = 0; // Taxa Metabólica Basal
+
+        if ($data['gender'] === 'male') {
+            $bmr = 88.362 + (13.397 * $data['weight']) + (4.799 * $data['height']) - (5.677 * $data['age']);
+        } else {
+            $bmr = 447.593 + (9.247 * $data['weight']) + (3.098 * $data['height']) - (4.330 * $data['age']);
+        }
+
+        // Multiplicador baseado no nível de atividade
+        $activityMultipliers = [
+            'sedentary' => 1.2,      // Pouco ou nenhum exercício
+            'light' => 1.375,        // Exercício leve 1-3 dias/semana
+            'moderate' => 1.55,      // Exercício moderado 3-5 dias/semana
+            'active' => 1.725,       // Exercício pesado 6-7 dias/semana
+            'extra_active' => 1.9    // Exercício muito pesado, trabalho físico
+        ];
+
+        return $bmr * $activityMultipliers[$data['activity_level']];
+    }
+
+    private function getBMICategory($bmi)
+    {
+        if ($bmi < 18.5) return 'Abaixo do peso';
+        if ($bmi < 24.9) return 'Peso normal';
+        if ($bmi < 29.9) return 'Sobrepeso';
+        if ($bmi < 34.9) return 'Obesidade Grau I';
+        if ($bmi < 39.9) return 'Obesidade Grau II';
+        return 'Obesidade Grau III';
     }
 
     public function show($id)
@@ -120,7 +171,7 @@ class HealthDataController extends Controller
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function($data) {
-                $bmi = $this->calculateBMI($data->weight, $data->height);
+                $bmi = $this->calculateIMC($data->weight, $data->height);
                 return [
                     'id' => $data->id,
                     'date' => $data->created_at->format('d/m/Y'),
@@ -128,15 +179,48 @@ class HealthDataController extends Controller
                     'height' => $data->height,
                     'bmi' => round($bmi, 1),
                     'bmiCategory' => $this->getBMICategory($bmi),
+                    'bmiClass' => $this->getBMIClass($bmi),
                     'sistolica' => $data->sistolica,
                     'diastolica' => $data->diastolica,
                     'age' => $data->age,
                     'gender' => $data->gender,
                     'activity_level' => $data->activity_level,
-                    // Adicione outros campos conforme necessário
+                    'pressureClass' => $this->getPressureClass($data->sistolica, $data->diastolica),
+                    'healthStatus' => $this->getHealthStatus($data),
+               
                 ];
             });
 
-        return view('health.history', compact('healthData'));
+        return view('history', compact('healthData'));
+    }
+
+
+    private function getBMIClass($bmi) {
+        if ($bmi < 18.5) return 'warning';
+        if ($bmi < 24.9) return 'success';
+        if ($bmi < 29.9) return 'warning';
+        return 'danger';
+    }
+    
+    private function getPressureClass($sistolica, $diastolica) {
+        if ($sistolica < 120 && $diastolica < 80) return 'success';
+        if ($sistolica < 130 && $diastolica < 85) return 'info';
+        if ($sistolica < 140 && $diastolica < 90) return 'warning';
+        return 'danger';
+    }
+    
+    private function getHealthStatus($data) {
+        $risks = 0;
+        $risks += isset($data['tabagismo']) && $data['tabagismo'] ? 1 : 0;
+        $risks += isset($data['alcoolismo']) && $data['alcoolismo'] ? 1 : 0;
+        $risks += isset($data['alimentacao_nao_saudavel']) && $data['alimentacao_nao_saudavel'] ? 1 : 0;
+    
+        if ($risks == 0) {
+            return '<i class="bi bi-emoji-smile text-success" data-bs-toggle="tooltip" title="Ótimo estado de saúde"></i>';
+        } elseif ($risks == 1) {
+            return '<i class="bi bi-emoji-neutral text-warning" data-bs-toggle="tooltip" title="Alguns pontos de atenção"></i>';
+        } else {
+            return '<i class="bi bi-emoji-frown text-danger" data-bs-toggle="tooltip" title="Necessita cuidados"></i>';
+        }
     }
 }

@@ -27,11 +27,14 @@ Route::middleware('auth')->group(function () {
 
     
     Route::get('/home', [HealthDataController::class, 'index'])->name('home');
+
     Route::post('/health/store', [HealthDataController::class, 'store'])->name('health.store');
     Route::get('/health/{id}', [HealthDataController::class, 'show'])->name('health.show');
     Route::delete('/health/{id}', [HealthDataController::class, 'destroy'])->name('health.destroy');
 
     Route::get('/history', [HealthDataController::class, 'history'])->name('history');
+
+    Route::get('/health/toggle-form', [HealthDataController::class, 'toggleForm'])->name('toggleForm');
 
 });
 

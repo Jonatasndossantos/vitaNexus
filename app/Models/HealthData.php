@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class HealthData extends Model
 {
     protected $table = 'health_data'; // Especifique o nome da tabela
-
+    
     protected $fillable = [
         'user_id',
         'weight',
@@ -24,7 +24,7 @@ class HealthData extends Model
         'insonia',
         'activity_level'
     ];
-
+    
     protected $casts = [
         'tabagismo' => 'boolean',
         'alcoolismo' => 'boolean',
