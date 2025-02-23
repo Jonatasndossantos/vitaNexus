@@ -8,6 +8,8 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.min.css" rel="stylesheet">
+ 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
@@ -26,5 +28,23 @@
                 {{ $slot }}
             </div>
         </div>
+
+        {{ $slot }}
+
+<!-- MDB JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.min.js"></script>
+
+<!-- Inicialização dos componentes MDB -->
+<script type="text/javascript">
+    // Inicializa todos os inputs
+    document.querySelectorAll('.form-outline').forEach((formOutline) => {
+        new mdb.Input(formOutline).init();
+    });
+
+    // Inicializa todos os botões com efeito ripple
+    document.querySelectorAll('[data-mdb-ripple-init]').forEach((rippleElement) => {
+        new mdb.Ripple(rippleElement).init();
+    });
+</script>
     </body>
 </html>
