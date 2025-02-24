@@ -225,6 +225,12 @@ $validator = Validator::make($request->all(), [
 ]);
 ```
 
+## 7. Tradução
+
+```bash
+ php artisan lang:publish
+```
+
 ## 7. Dicas de Desenvolvimento
 1. Use migrations para todas as alterações no banco
 2. Mantenha os cálculos de saúde em métodos separados

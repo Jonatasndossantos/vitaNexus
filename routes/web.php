@@ -15,9 +15,13 @@ Route::get('/home', function () {
     return view('home');
 });
 
+Route::get('/bemEstar', function () {
+    return view('bemEstar');
+})->name('bemEstar');
+
 Route::middleware(['web'])->group(function () {
     Route::get('/home', [HealthCalculatorController::class, 'index'])->name('home');
-    Route::post('/calculate-health', [HealthCalculatorController::class, 'calculate'])->name('calculate.health');
+    
 });
 
 Route::middleware('auth')->group(function () { // middleware('auth') é usado para autenticar o usuário

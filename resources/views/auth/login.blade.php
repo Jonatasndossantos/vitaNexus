@@ -1,47 +1,89 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <div class="container-fluid vh-100">
+        <div class="row h-100">
+            <!-- Left side - Login Form -->
+            <div class="col-12 col-md-6 p-5">
+                <div class="d-flex flex-column h-100 justify-content-center" style="max-width: 400px; margin: 0 auto;">
+                    <!-- Logo -->
+                    <div class="text-center mb-4">
+                        <img src="{{ url ('/assets/imagem/logo2.png ')}}" alt="Lotus Logo" style="width: 200px;">
+                      
+                    </div>
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+                
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    <!-- Login Form -->
+                    <form method="POST" action="{{ route('login') }}">
+                        @csrf
+
+  
+                        <div class="form-floating mb-3">
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="email" 
+                                   name="email" 
+                                   placeholder="name@example.com"
+                                   value="{{ old('email') }}" 
+                                   required>
+                            <label for="email">Email</label>
+                            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="password"
+                                   name="password" 
+                                   placeholder="Password"
+                                   required>
+                            <label for="password">Senha</label>
+                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                        </div>
+
+                        <!-- Login Button -->
+                        <button type="submit" class="btn btn-lg btn-success w-100 mb-3" 
+                              >
+                            LOGIN
+                        </button>
+
+                        <!-- Forgot Password Link -->
+                        <div class="text-center">
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}" class="text-decoration-none" style="color:rgb(32, 198, 96);">
+                                   Esqueceu sua senha?
+                                </a>
+                            @endif
+                        </div>
+
+                        <!-- Create Account Link -->
+                        <div class="text-center">
+                            <span class="text-muted">Não tem uma conta </span>
+                            <a href="{{ route('register') }}" class="text-decoration-none" style="color:rgb(32, 198, 96);">
+                                Cadastre-se
+                            </a>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <a href="/" class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#05664F] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
+                                <button type="button" class="btn btn-outline-success">
+                                    Voltar
+                                </button>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right side - Gradient Background -->
+            <div class="col-md-6 d-none d-md-flex align-items-center text-white p-5"
+                 style="background: linear-gradient(270deg, rgba(9,121,17,1) 16%, rgba(255,255,255,1) 91%);">
+                
+            </div>
         </div>
+    </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+    
+</main>
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
 </x-guest-layout>

@@ -99,7 +99,6 @@ class HealthDataController extends Controller
             $healthData->estresse_cronico = $request->has('estresse_cronico');
             $healthData->drogas_ilicitas = $request->has('drogas_ilicitas');
             $healthData->insonia = $request->has('insonia');
-            $healthData->teste = $request->has('teste');
             $healthData->save();
 
             // Calcular resultados
