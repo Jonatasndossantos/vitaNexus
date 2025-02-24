@@ -2,8 +2,6 @@
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <h2 class="mb-4 text-center">Saúde em Foco</h2>
-                
                 <div class="row g-4 mb-5 ">
                     <!-- Card IMC -->
                     <div class="col-md-4">

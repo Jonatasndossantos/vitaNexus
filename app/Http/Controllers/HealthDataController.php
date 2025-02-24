@@ -11,10 +11,10 @@ class HealthDataController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $lastHealthData = $user->healthData()->latest()->first();
+        $lastHealthData = $user->healthData()->latest()->first(); // pega o proximo dado de saúde do usuário pelo usuario
         
         // Pega o parâmetro da URL ou usa false como padrão
-        $showForm = $request->query('form', false);
+        $showForm = $request->query('form', false); //resultado la no home
 
         if ($lastHealthData) {
             // Calcular todos os dados necessários
@@ -30,7 +30,7 @@ class HealthDataController extends Controller
             $lastHealthData->calories = round($calories);
             $lastHealthData->macros = [
                 'protein' => [
-                    'min' => round($calories * 0.25 / 4),
+                    'min' => round($calories * 0.10 / 4), // 10% do total calórico dividido por 4 kcal/g
                     'max' => round($calories * 0.35 / 4)
                 ],
                 'carbs' => [
@@ -65,9 +65,9 @@ class HealthDataController extends Controller
         try {
             // Validação dos dados
             $validator = Validator::make($request->all(), [
-                'weight' => 'required|numeric|min:30|max:300',
-                'height' => 'required|numeric|min:100|max:250',
-                'age' => 'required|numeric|min:1|max:120',
+                'weight' => 'required|numeric|min:10|max:300',
+                'height' => 'required|numeric|min:10|max:400',
+                'age' => 'required|numeric|min:1|max:150',
                 'gender' => 'required|in:male,female',
                 'sistolica' => 'required|numeric|min:1|max:200',
                 'diastolica' => 'required|numeric|min:1|max:160',
@@ -93,12 +93,13 @@ class HealthDataController extends Controller
             $healthData->diastolica = $request->diastolica;
             $healthData->activity_level = $request->activity_level;
 
-            $healthData->tabagismo = $request->has('tabagismo');
+            $healthData->tabagismo = $request->has('tabagismo'); //Se o checkbox não estiver marcado, o campo não será enviado na requisição, e o método has retornará false.
             $healthData->alcoolismo = $request->has('alcoolismo');
             $healthData->alimentacao_nao_saudavel = $request->has('alimentacao_nao_saudavel');
             $healthData->estresse_cronico = $request->has('estresse_cronico');
             $healthData->drogas_ilicitas = $request->has('drogas_ilicitas');
             $healthData->insonia = $request->has('insonia');
+            $healthData->teste = $request->has('teste');
             $healthData->save();
 
             // Calcular resultados
@@ -118,14 +119,9 @@ class HealthDataController extends Controller
                 ->withInput()
                 ->withErrors(['error' => 'Erro ao salvar os dados: ' . $e->getMessage()]);
         }
-    }
+    }//Fim store
 
-    private function calculateIMC($weight, $height)
-    {
-        $heightInMeters = $height / 100;
-        return round($weight / ($heightInMeters * $heightInMeters), 2);
-    }
-
+    
     private function calculateWaterIntake($weight)
     {
         // Cálculo básico: 35ml por kg de peso corporal
@@ -142,7 +138,7 @@ class HealthDataController extends Controller
         } else {
             $bmr = 447.593 + (9.247 * $data['weight']) + (3.098 * $data['height']) - (4.330 * $data['age']);
         }
-
+        
         // Multiplicador baseado no nível de atividade
         $activityMultipliers = [
             'sedentary' => 1.2,      // Pouco ou nenhum exercício
@@ -155,8 +151,18 @@ class HealthDataController extends Controller
         return $bmr * $activityMultipliers[$data['activity_level']];
     }
 
+
+    // ---------IMC--------  https://www.mdsaude.com/endocrinologia/calculadora-imc
+    private function calculateIMC($weight, $height)
+    {
+        $heightInMeters = $height / 100;
+        return round($weight / ($heightInMeters * $heightInMeters), 2);
+    }
+
     private function getBMICategory($bmi)
     {
+        if ($bmi < 15.9) return 'Extremamente abaixo do peso';
+        if ($bmi < 16.9) return 'Muito abaixo do peso';
         if ($bmi < 18.5) return 'Abaixo do peso';
         if ($bmi < 24.9) return 'Peso normal';
         if ($bmi < 29.9) return 'Sobrepeso';
@@ -164,15 +170,16 @@ class HealthDataController extends Controller
         if ($bmi < 39.9) return 'Obesidade Grau II';
         return 'Obesidade Grau III';
     }
-
-
     
     private function getBMIClass($bmi) {
+        if ($bmi < 16.9) return 'danger';
         if ($bmi < 18.5) return 'warning';
         if ($bmi < 24.9) return 'success';
         if ($bmi < 29.9) return 'warning';
         return 'danger';
     }
+
+
     
     private function getPressureClass($sistolica, $diastolica) {
         if ($sistolica < 120 && $diastolica < 80) return 'success';
@@ -186,6 +193,10 @@ class HealthDataController extends Controller
         $risks += isset($data['tabagismo']) && $data['tabagismo'] ? 1 : 0;
         $risks += isset($data['alcoolismo']) && $data['alcoolismo'] ? 1 : 0;
         $risks += isset($data['alimentacao_nao_saudavel']) && $data['alimentacao_nao_saudavel'] ? 1 : 0;
+        $risks += isset($data['alimentacao_nao_saudavel']) && $data['alimentacao_nao_saudavel'] ? 1 : 0;
+        $risks += isset($data['estresse_cronico']) && $data['estresse_cronico'] ? 1 : 0;
+        $risks += isset($data['drogas_ilicitas']) && $data['drogas_ilicitas'] ? 1 : 0;
+        $risks += isset($data['insonia']) && $data['insonia'] ? 1 : 0;
     
         if ($risks == 0) {
             return '<i class="bi bi-emoji-smile text-success" data-bs-toggle="tooltip" title="Ótimo estado de saúde"></i>';
@@ -286,6 +297,9 @@ class HealthDataController extends Controller
                 'tabagismo' => $data->tabagismo,
                 'alcoolismo' => $data->alcoolismo,
                 'alimentacao_nao_saudavel' => $data->alimentacao_nao_saudavel,
+                'estresse_cronico' => $data->estresse_cronico,
+                'drogas_ilicitas' => $data->drogas_ilicitas,
+                'insonia' => $data->insonia,
             ];
         });
 
@@ -311,6 +325,9 @@ class HealthDataController extends Controller
             'tabagismo' => 'nullable|boolean',
             'alcoolismo' => 'nullable|boolean',
             'alimentacao_nao_saudavel' => 'nullable|boolean',
+            'estresse_cronico' => 'nullable|boolean',
+            'drogas_ilicitas' => 'nullable|boolean',
+            'insonia' => 'nullable|boolean',
         ]);
 
         // Tratar checkboxes não marcados
@@ -322,5 +339,5 @@ class HealthDataController extends Controller
 
         return redirect()->route('history')
             ->with('success', 'Registro atualizado com sucesso!');
-    }
-}
+    }//FIm history
+}//Fim class

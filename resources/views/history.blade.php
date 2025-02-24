@@ -5,7 +5,7 @@
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+            </div>  
         @endif
 
         <div class="row justify-content-center">
@@ -191,9 +191,25 @@
                             </div>
                             <div class="form-check">
                                 <input type="checkbox" name="risk_factors[]" value="alimentacao_nao_saudavel" 
-                                       class="form-check-input" {{ in_array('alimentacao_nao_saudavel', request('risk_factors', [])) ? 'checked' : '' }}>
+                                class="form-check-input" {{ in_array('alimentacao_nao_saudavel', request('risk_factors', [])) ? 'checked' : '' }}>
                                 <label class="form-check-label">Alimentação não saudável</label>
                             </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="risk_factors[]" value="estresse_cronico" 
+                                       class="form-check-input" {{ in_array('estresse_cronico', request('risk_factors', [])) ? 'checked' : '' }}>
+                                <label class="form-check-label">estresse_cronico</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="risk_factors[]" value="drogas_ilicitas" 
+                                       class="form-check-input" {{ in_array('drogas_ilicitas', request('risk_factors', [])) ? 'checked' : '' }}>
+                                <label class="form-check-label">drogas_ilicitas</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="risk_factors[]" value="insonia" 
+                                       class="form-check-input" {{ in_array('insonia', request('risk_factors', [])) ? 'checked' : '' }}>
+                                <label class="form-check-label">insonia</label>
+                            </div>
+                            
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -269,8 +285,23 @@
                                 </div>
                                 <div class="form-check">
                                     <input type="checkbox" name="alimentacao_nao_saudavel" value="1" 
-                                           class="form-check-input" {{ $data['alimentacao_nao_saudavel'] ? 'checked' : '' }}>
+                                    class="form-check-input" {{ $data['alimentacao_nao_saudavel'] ? 'checked' : '' }}>
                                     <label class="form-check-label">Alimentação não saudável</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="estresse_cronico" value="1" 
+                                           class="form-check-input" {{ $data['estresse_cronico'] ? 'checked' : '' }}>
+                                    <label class="form-check-label">estresse_cronico</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="drogas_ilicitas" value="1" 
+                                           class="form-check-input" {{ $data['drogas_ilicitas'] ? 'checked' : '' }}>
+                                    <label class="form-check-label">drogas_ilicitas</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="insonia" value="1" 
+                                           class="form-check-input" {{ $data['insonia'] ? 'checked' : '' }}>
+                                    <label class="form-check-label">insonia</label>
                                 </div>
                             </div>
                         </div>

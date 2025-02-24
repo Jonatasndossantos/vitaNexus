@@ -108,47 +108,81 @@ php artisan make:controller HealthDataController
 ```
 
 ### 3.1 HealthDataController
-- Principais métodos:
-  - index(): Exibe dashboard com últimos dados
-  - store(): Salva novos dados de saúde
-  - history(): Mostra histórico de medições
-  - calculateIMC(): Calcula IMC
-  - calculateWaterIntake(): Calcula necessidade de água
-  - calculateCalories(): Calcula necessidades calóricas
-  - os outros sao para ajudar nesses principais
+- **index()**: Exibe o dashboard com os últimos dados de saúde do usuário.
+  - **Interação**: Quando o usuário acessa a página inicial (`/home`), o método `index()` é chamado. Ele busca os dados de saúde mais recentes do usuário logado e os passa para a view `home.blade.php`.
+  - **Botão "Novo Registro"**: Redireciona para a mesma página, mas com um formulário para adicionar novos dados de saúde. O botão é gerado na view com a rota `home` e um parâmetro `form=true`.
 
-### 3.2 Cálculos Importantes
-```php
-// Cálculo do IMC
-private function calculateIMC($weight, $height)
-{
-    $heightInMeters = $height / 100;
-    return $weight / ($heightInMeters * $heightInMeters);
-}
+- **store()**: Salva novos dados de saúde no banco de dados.
+  - **Interação**: Quando o usuário preenche o formulário e clica no botão "Salvar", o método `store()` é chamado. Ele valida os dados do formulário e, se tudo estiver correto, cria um novo registro na tabela `health_data`.
+  - **Botão "Salvar"**: Envia os dados do formulário para a rota `health.store`, que chama o método `store()`.
+  - **Cálculos**:
+    - **calculateIMC()**: Após a validação, o IMC é calculado com base no peso e altura fornecidos.
+    - **calculateWaterIntake()**: Calcula a necessidade diária de água com base no peso do usuário.
+    - **calculateCalories()**: Calcula as necessidades calóricas diárias com base em fatores como idade, gênero, peso e nível de atividade.
 
-// Cálculo de calorias (Harris-Benedict)
-private function calculateCalories($data)
-{
-    $bmr = ($data['gender'] === 'male')
-        ? 88.362 + (13.397 * $weight) + (4.799 * $height) - (5.677 * $age)
-        : 447.593 + (9.247 * $weight) + (3.098 * $height) - (4.330 * $age);
-    
-    return $bmr * $activityMultipliers[$data['activity_level']];
-}
+### 3.2 Interações com a View
 
-'protein' => [
-    'min' => round($calories * 0.25 / 4),
-    'max' => round($calories * 0.35 / 4)
-],
-'carbs' => [
-    'min' => round($calories * 0.45 / 4),
-    'max' => round($calories * 0.65 / 4)
-],
-'fats' => [
-    'min' => round($calories * 0.20 / 9),
-    'max' => round($calories * 0.35 / 9)
-]
-```
+- **Botão "IMC"**: 
+  - **Ação**: Ao clicar, abre um modal que explica o que é o IMC e como ele é calculado.
+  - **Como Funciona**: O modal é ativado pelo atributo `data-bs-toggle="modal"` e `data-bs-target="#imcModal"`, que faz com que o Bootstrap exiba o modal correspondente. Não faz chamadas ao backend, apenas exibe informações.
+
+- **Botão "Hidratação"**: 
+  - **Ação**: Ao clicar, abre um modal que fornece informações sobre a importância da hidratação e recomendações gerais.
+  - **Como Funciona**: Similar ao botão IMC, utiliza `data-bs-toggle` e `data-bs-target` para abrir o modal. Não faz chamadas ao backend.
+
+- **Botão "Calorias"**: 
+  - **Ação**: Ao clicar, abre um modal que explica como calcular as necessidades calóricas.
+  - **Como Funciona**: Utiliza os mesmos atributos para abrir o modal. Sem interação com o backend.
+
+- **Formulário de Registro de Saúde**: 
+  - **Campos**: Peso, altura, idade, gênero, pressão arterial, nível de atividade, e vícios.
+  - **Botão "Salvar"**: 
+    - **Ação**: Envia os dados do formulário para o método `store()` do `HealthDataController`.
+    - **Como Funciona**: O formulário é enviado via POST para a rota `health.store`. Se a validação falhar, os erros são exibidos na mesma página.
+    - **Cálculos**:
+      - **calculateIMC()**: 
+        ```php
+        private function calculateIMC($weight, $height)
+        {
+            $heightInMeters = $height / 100;
+            return round($weight / ($heightInMeters * $heightInMeters), 2);
+        }
+        ```
+      - **calculateWaterIntake()**: 
+        ```php
+        private function calculateWaterIntake($weight)
+        {
+            // Cálculo básico: 35ml por kg de peso corporal
+            return $weight * 35;
+        }
+        ```
+      - **calculateCalories()**: 
+        ```php
+        private function calculateCalories($data)
+        {
+            // Fórmula de Harris-Benedict revisada
+            $bmr = 0; // Taxa Metabólica Basal
+
+            if ($data['gender'] === 'male') {
+                $bmr = 88.362 + (13.397 * $data['weight']) + (4.799 * $data['height']) - (5.677 * $data['age']);
+            } else {
+                $bmr = 447.593 + (9.247 * $data['weight']) + (3.098 * $data['height']) - (4.330 * $data['age']);
+            }
+
+            // Multiplicador baseado no nível de atividade
+            $activityMultipliers = [
+                'sedentary' => 1.2,      // Pouco ou nenhum exercício
+                'light' => 1.375,        // Exercício leve 1-3 dias/semana
+                'moderate' => 1.55,      // Exercício moderado 3-5 dias/semana
+                'active' => 1.725,       // Exercício pesado 6-7 dias/semana
+                'extra_active' => 1.9    // Exercício muito pesado, trabalho físico
+            ];
+
+            return $bmr * $activityMultipliers[$data['activity_level']];
+        }
+        ```
+
+- **Exibição de Resultados**: Após o envio bem-sucedido do formulário, os dados mais recentes são exibidos na parte superior da página, mostrando IMC, consumo de água e necessidades calóricas.
 
 ## 4. Views e Frontend
 
