@@ -1,9 +1,152 @@
+# OPS esta area esta em desenvolvimento desconsidere maluquices
+
 ## Preparando o Ambiente
-Ao clonar o repositorio certifique-se de estar na pasta correta e de um ```composer update and composer install```. Verifique o arquivo **.env** se nao estiver use o **.env.example** renomeie para .env e precisamos cria uma chave para o app de um ```php artisan key:generate``` e Lembrando que este codigo tambem usa o vite, coloque ```npm install and npm run build
-composer run dev```. Alem disso usamos o breeze, coloque ```php artisan breeze:install ```
-```php artisan migrate``` *ops: se der algum erro de* ```php artisan config:clear ``` Finalize com
-```npm run dev```
-E pronto, de um ```php artisan serve```
+Ao clonar o repositorio certifique-se de estar na pasta correta.<br>
+De um ```composer update and composer install```. <br>
+*if error: ```git config --global --add safe.directory C:/xampp/htdocs```* <br><br>
+
+Verifique o arquivo **.env** se nao estiver use o **.env.example** clone e renomeie para .env<br>
+Precisamos cria uma chave para o app de um ```php artisan key:generate``` <br>
+
+Lembrando que este codigo tambem usa o vite,<br> 
+Coloque ```npm install ``` ```npm run build``` ```composer run dev```. <br>
+coloque ```php artisan migrate```<br> 
+*if error* ```php artisan config:clear ```<br><br> 
+E pronto, de um ```php artisan serve```.
+
+
+*Alem disso usamos o breeze ops: se der algum erro de* ```php artisan breeze:install ``` 
+
+
+# Saúde em Foco - Sistema de Monitoramento de Saúde
+
+## 📋 Sobre o Projeto
+Saúde em Foco é uma aplicação web desenvolvida em Laravel que permite aos usuários monitorar diversos aspectos de sua saúde, incluindo:
+- Cálculo de IMC (Índice de Massa Corporal)
+- Monitoramento de hidratação
+- Cálculo de necessidades calóricas
+- Acompanhamento de pressão arterial
+- Registro de hábitos de saúde
+
+## 🚀 Tecnologias Utilizadas
+- Laravel 10.x
+- PHP 8.x
+- MySQL
+- Bootstrap 5
+- Alpine.js
+- Vite
+
+## 💻 Pré-requisitos
+- PHP >= 8.1
+- Composer
+- Node.js e NPM
+- MySQL
+
+## 🔧 Instalação e Configuração
+
+1. Clone o repositório:
+```bash
+git clone [url-do-repositorio]
+cd [nome-do-projeto]
+```
+
+2. Instale as dependências do PHP:
+```bash
+composer install
+composer update
+```
+
+
+3. Instale as dependências do Node:
+```bash
+npm install
+```
+
+4. Configure o ambiente:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+5. Configure o banco de dados no arquivo .env:
+```php
+DB_CONNECTION=sqlite
+#DB_HOST=127.0.0.1
+#DB_PORT=3306
+#DB_DATABASE=seu_banco_de_dados
+#DB_USERNAME=seu_usuario
+#DB_PASSWORD=sua_senha
+```
+
+6. Execute as migrações:
+```bash
+php artisan migrate
+```
+
+7. Compile os assets:
+```bash
+npm run build
+npm run dev
+```
+* ops: voce nao podera mais escrever se manter no mesmo terminal, crie outro para continuar*
+
+8. Inicie o servidor:
+```bash
+php artisan serve
+```
+
+
+## 🔐 Autenticação
+O sistema utiliza o Laravel Breeze para autenticação, oferecendo:
+- Registro de usuários
+- Login
+- Recuperação de senha
+- Verificação de email
+
+## 📊 Funcionalidades Principais
+- Cálculo automático de IMC
+- Recomendações personalizadas de hidratação
+- Cálculo de necessidades calóricas baseado em diversos fatores
+- Histórico de medições
+- Dashboard personalizado
+- Monitoramento de pressão arterial
+- Registro de hábitos de saúde
+
+## 🤝 Contribuindo
+Contribuições são sempre bem-vindas! Para contribuir:
+
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📝 Licença
+Este projeto está sob a licença de JonatasNdosSantos. Veja o arquivo LICENSE para mais detalhes.
+
+
+---
+## Historia
+Usuario: Ao entrar quero colcoar meus dados normais para contato e facilitação de proximo acesso
+usuario: quero poder navear pelo site e ver sua beleza, animação
+usuario: Colocar meus dados e ver.
+
+desenvolvedor: Quero promover um bom conforto em meu site
+desenvolvedor: quero poder ser util dando funçoes sobre saude e bem estar.
+
+## Cadastro e Login 
+Criar pagina com form: example bootstrap
+Criar logica de cadastro e login: CRUD basico, esta nas anotaçoes da aula do laravel
+
+## Funcionalidades
+Colocar os dados e salvar: CRUD basico
+Fazer calculos e mostrar para o usuario: Logica ja foi feita com pesquisa, só precisa salvar
+organizar para nao dar conflito: *ops parte mais dificil*
+
+## Beleza do site
+Cores css ou bootstrap: ja esta sendo feito pela nicole
+
+182e7794-1d01-4270-bc60-a7dc6faf5a14
 
 ---
 
