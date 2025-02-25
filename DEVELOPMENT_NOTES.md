@@ -226,7 +226,7 @@ $validator = Validator::make($request->all(), [
 ```
 
 ## 7. Tradução
-
+Primeiramente devemos
 ```bash
  php artisan lang:publish
 ```

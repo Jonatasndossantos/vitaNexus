@@ -1,12 +1,7 @@
 <x-app-layout>
     <div class="container py-5">
         <!-- Alerta de Sucesso -->
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>  
-        @endif
+        
 
         <div class="row justify-content-center">
             <div class="col-lg-11">
@@ -22,7 +17,7 @@
                 </div>
 
                 <!-- Card Principal -->
-                <div class="card border-success shadow-sm">
+                <div class="card shadow-sm">
                     <div class="card-header bg-success bg-opacity-10 border-success">
                         <div class="row align-items-center">
                             <div class="col">
@@ -86,17 +81,17 @@
                                                 {!! $data['healthStatus'] !!}
                                             </td>
                                             <td class="text-end px-4">
-                                                <div class="btn-group btn-group-sm">
+                                                <div class="btn-group-sm">
                                                     <a href="#" 
                                                        class="btn btn-outline-primary"
                                                        data-bs-toggle="modal" 
                                                        data-bs-target="#editModal{{ $data['id'] }}">
                                                         <i class="bi bi-pencil"></i>
                                                     </a>
-                                                    <form action="{{ route('delete', $data['id']) }}" method="POST" style="display:inline;">
+                                                    <form action="{{ route('delete', $data['id']) }}" method="POST" style="display:inline;" class="">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Tem certeza que deseja excluir?')">
+                                                        <button type="submit" class="btn text-danger" onclick="return confirm('Tem certeza que deseja excluir?')">
                                                             <i class="bi bi-trash"></i>
                                                         </button>
                                                     </form>

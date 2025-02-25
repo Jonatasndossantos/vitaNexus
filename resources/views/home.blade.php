@@ -381,24 +381,10 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Exibição dos dados salvos -->
-                @if(session('success'))
-                    <div class="alert alert-success mt-4">
-                        {{ session('success') }}
-                        @if(session('imc'))
-                            <br>Seu IMC é: {{ session('imc') }}
-                        @endif
-                    </div>
-                @endif
-
-                
-
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
     // Validação do formulário

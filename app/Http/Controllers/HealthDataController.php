@@ -124,7 +124,7 @@ class HealthDataController extends Controller
     private function calculateWaterIntake($weight)
     {
         // Cálculo básico: 35ml por kg de peso corporal
-        return $weight * 35;
+        return $weight * 35/1000;
     }
 
     private function calculateCalories($data)
@@ -181,9 +181,13 @@ class HealthDataController extends Controller
 
     
     private function getPressureClass($sistolica, $diastolica) {
-        if ($sistolica < 120 && $diastolica < 80) return 'success';
-        if ($sistolica < 130 && $diastolica < 85) return 'info';
-        if ($sistolica < 140 && $diastolica < 90) return 'warning';
+        
+        if ($sistolica < 90 || $diastolica < 50) return 'danger'; // Hipotensão perigosa
+        if ($sistolica < 120 && $diastolica < 80) return 'success'; // Pressão ótima
+        if ($sistolica < 130 && $diastolica < 85) return 'info'; // Normal
+        if ($sistolica < 140 && $diastolica < 90) return 'warning'; // Normal-alta
+        if ($sistolica < 160 && $diastolica < 100) return 'danger'; // Hipertensão Grau 1
+        if ($sistolica < 180 && $diastolica < 110) return 'danger'; // Hipertensão Grau 2
         return 'danger';
     }
     
@@ -191,7 +195,6 @@ class HealthDataController extends Controller
         $risks = 0;
         $risks += isset($data['tabagismo']) && $data['tabagismo'] ? 1 : 0;
         $risks += isset($data['alcoolismo']) && $data['alcoolismo'] ? 1 : 0;
-        $risks += isset($data['alimentacao_nao_saudavel']) && $data['alimentacao_nao_saudavel'] ? 1 : 0;
         $risks += isset($data['alimentacao_nao_saudavel']) && $data['alimentacao_nao_saudavel'] ? 1 : 0;
         $risks += isset($data['estresse_cronico']) && $data['estresse_cronico'] ? 1 : 0;
         $risks += isset($data['drogas_ilicitas']) && $data['drogas_ilicitas'] ? 1 : 0;
