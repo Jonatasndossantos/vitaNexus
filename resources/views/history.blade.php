@@ -51,7 +51,6 @@
                                     <tr>
                                         <th class="px-4">Data</th>
                                         <th>Peso</th>
-                                        <th>Altura</th>
                                         <th>IMC</th>
                                         <th>Pressão Arterial</th>
                                         <th class="text-center">Status</th>
@@ -65,7 +64,6 @@
                                                 <strong>{{ $data['date'] }}</strong>
                                             </td>
                                             <td>{{ $data['weight'] }} kg</td>
-                                            <td>{{ $data['height'] }} cm</td>
                                             <td>
                                                 <span class="badge bg-{{ $data['bmiClass'] }}">
                                                     {{ $data['bmi'] }}
