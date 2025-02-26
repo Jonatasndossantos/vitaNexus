@@ -1,3 +1,48 @@
+# OPS esta area esta em desenvolvimento desconsidere maluquices
+
+## Preparando o Ambiente
+Ao clonar o repositorio certifique-se de estar na pasta correta.<br>
+De um ```composer update and composer install```. <br>
+*if error: ```git config --global --add safe.directory C:/xampp/htdocs```* <br><br>
+
+Verifique o arquivo **.env** se nao estiver use o **.env.example** clone e renomeie para .env<br>
+Precisamos cria uma chave para o app de um ```php artisan key:generate``` <br>
+
+Lembrando que este codigo tambem usa o vite,<br> 
+Coloque ```npm install ``` ```npm run build``` ```composer run dev```. <br>
+coloque ```php artisan migrate```<br> 
+*if error* ```php artisan config:clear ```<br><br> 
+E pronto, de um ```php artisan serve```.
+
+
+*Alem disso usamos o breeze ops: se der algum erro de* ```php artisan breeze:install ``` 
+
+
+# Saúde em Foco - Sistema de Monitoramento de Saúde
+---
+## Historia
+Usuario: Ao entrar quero colcoar meus dados normais para contato e facilitação de proximo acesso
+usuario: quero poder navear pelo site e ver sua beleza, animação
+usuario: Colocar meus dados e ver.
+
+desenvolvedor: Quero promover um bom conforto em meu site
+desenvolvedor: quero poder ser util dando funçoes sobre saude e bem estar.
+
+## Cadastro e Login 
+Criar pagina com form: example bootstrap
+Criar logica de cadastro e login: CRUD basico, esta nas anotaçoes da aula do laravel
+
+## Funcionalidades
+Colocar os dados e salvar: CRUD basico
+Fazer calculos e mostrar para o usuario: Logica ja foi feita com pesquisa, só precisa salvar
+organizar para nao dar conflito: *ops parte mais dificil*
+
+## Beleza do site
+Cores css ou bootstrap: ja esta sendo feito pela nicole
+
+182e7794-1d01-4270-bc60-a7dc6faf5a14
+
+---
 # Guia de Desenvolvimento - Saúde em Foco
 
 ## 1. Estrutura do Projeto
@@ -245,3 +290,4 @@ Primeiramente devemos
 - [ ] Criar API para possível app mobile
 - [ ] Implementar exportação de dados
 - [ ] Adicionar notificações e lembretes 
+
