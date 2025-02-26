@@ -53,6 +53,8 @@ Cores css ou bootstrap: ja esta sendo feito pela nicole
 laravel new saude-em-foco
 #ou
 composer create-project laravel/laravel saude-em-foco
+composer create-project laravel/laravel:^11.* project_name
+# version
 
 
 # Instalar Breeze para autenticação
