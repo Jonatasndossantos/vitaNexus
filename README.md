@@ -100,7 +100,7 @@ Contribuições são sempre bem-vindas! Para contribuir:
 5. Abra um Pull Request
 
 ## 📝 Licença
-Este projeto está sob a licença de JonatasNdosSantos. Veja o arquivo LICENSE para mais detalhes.
+Este projeto está sob a licença de JonatasNdosSantos. Veja o arquivo [MIT license](LICENSE.md). para mais detalhes.
 
 
 
