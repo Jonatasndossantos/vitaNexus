@@ -12,13 +12,13 @@ Saúde em Foco é uma aplicação web desenvolvida em Laravel que permite aos us
 ## 🚀 Tecnologias Utilizadas
 - Laravel 10.x
 - PHP 8.x
-- MySQL
+- sqlite
 - Bootstrap 5
 
 ## 💻 Pré-requisitos
 - PHP >= 8.1
 - Composer
-- MySQL
+- sqlite
 
 ## 🔧 Instalação e Configuração
 
@@ -37,6 +37,8 @@ composer update
 3. Configure o ambiente:
 ```bash
 cp .env.example .env
+```
+```bash
 php artisan key:generate
 ```
 
