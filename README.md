@@ -11,13 +11,10 @@ Saúde em Foco é uma aplicação web desenvolvida em Laravel que permite aos us
 - PHP 8.x
 - MySQL
 - Bootstrap 5
-- Alpine.js
-- Vite
 
 ## 💻 Pré-requisitos
 - PHP >= 8.1
 - Composer
-- Node.js e NPM
 - MySQL
 
 ## 🔧 Instalação e Configuração
@@ -34,19 +31,13 @@ composer install
 composer update
 ```
 
-
-3. Instale as dependências do Node:
-```bash
-npm install
-```
-
-4. Configure o ambiente:
+3. Configure o ambiente:
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-5. Configure o banco de dados no arquivo .env:
+4. Configure o banco de dados no arquivo .env:
 ```php
 DB_CONNECTION=sqlite
 #DB_HOST=127.0.0.1
@@ -56,19 +47,13 @@ DB_CONNECTION=sqlite
 #DB_PASSWORD=sua_senha
 ```
 
-6. Execute as migrações:
+5. Execute as migrações:
 ```bash
 php artisan migrate
 ```
+se ele pedir para criar algum arquivo, digite yes.
 
-7. Compile os assets:
-```bash
-npm run build
-npm run dev
-```
-* ops: voce nao podera mais escrever se manter no mesmo terminal, crie outro para continuar*
-
-8. Inicie o servidor:
+6. Inicie o servidor:
 ```bash
 php artisan serve
 ```
