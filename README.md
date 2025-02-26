@@ -6,6 +6,9 @@ Saúde em Foco é uma aplicação web desenvolvida em Laravel que permite aos us
 - Acompanhamento de pressão arterial
 - Registro de hábitos de saúde
 
+  ![image](https://github.com/user-attachments/assets/b4de6b35-398c-4e82-b6f8-6dfcf5f71103)
+
+
 ## 🚀 Tecnologias Utilizadas
 - Laravel 10.x
 - PHP 8.x
