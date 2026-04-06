@@ -1,0 +1,50 @@
+name: Deploy Blade Landing Page
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 🐘
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, dom, fileinfo
+
+      - name: Install Composer Dependencies 📦
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Setup Node.js ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Compile Assets (Tailwind/Vite) 🎨
+        run: |
+          npm install
+          npm run build
+
+      - name: Render Blade to HTML 📄
+        run: |
+          # Criamos um script rápido para renderizar a view 'welcome' (ou a sua landing)
+          # e salvar como index.html na pasta public
+          php -r '
+            include "vendor/autoload.php";
+            $app = require_once "bootstrap/app.php";
+            $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+            $kernel->bootstrap();
+            $html = view("welcome")->render(); // Ajuste para o nome da sua view
+            file_put_contents("public/index.html", $html);
+          '
+
+      - name: Deploy to GitHub Pages 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: public # O GitHub Pages vai servir o que estiver aqui
+          branch: gh-pages
