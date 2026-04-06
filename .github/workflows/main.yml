@@ -35,14 +35,25 @@ jobs:
 
       - name: Render Blade to HTML 📄
         run: |
-          # Criamos um script rápido para renderizar a view 'welcome' (ou a sua landing)
-          # e salvar como index.html na pasta public
+          # Configuramos a APP_URL dinamicamente para o GitHub Pages
+          export APP_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          
           php -r '
             include "vendor/autoload.php";
             $app = require_once "bootstrap/app.php";
             $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
             $kernel->bootstrap();
-            $html = view("welcome")->render(); // Ajuste para o nome da sua view
+
+            // Forçamos a URL base para evitar o localhost nas imagens/assets
+            url()->forceRootUrl(getenv("APP_URL"));
+
+            $html = view("welcome")->render(); 
+            
+            // Se o seu projeto usa Vite, garantimos que o caminho do build seja relativo
+            $html = str_replace("/build/", "build/", $html);
+            // Se você usa assets manuais na pasta assets/dist:
+            $html = str_replace("/assets/", "assets/", $html);
+
             file_put_contents("public/index.html", $html);
           '
 
