@@ -35,24 +35,28 @@ jobs:
 
       - name: Render Blade to HTML 📄
         run: |
-          # Criamos um arquivo .env temporário para o Action não usar o seu local
-          echo "APP_URL=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" > .env
-          echo "ASSET_URL=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" >> .env
-          
           php -r '
             include "vendor/autoload.php";
             $app = require_once "bootstrap/app.php";
             $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
             $kernel->bootstrap();
 
-            // Renderiza a view
             $html = view("welcome")->render(); 
             
-            // LIMPEZA TOTAL: Remove qualquer menção a localhost que tenha sobrado
-            // e remove a barra inicial para tornar os caminhos relativos
-            $html = str_replace("http://localhost/", "", $html);
-            $html = str_replace("/build/", "build/", $html);
-            $html = str_replace("/assets/", "assets/", $html);
+            // 1. Remove qualquer URL absoluta (localhost ou github.io/repo)
+            // Isso transforma "https://.../build/assets/..." em "/build/assets/..."
+            $html = preg_replace("/https?:\/\/[^\/]+\/[^\/]+\//", "/", $html);
+            $html = str_replace("http://localhost/", "/", $html);
+
+            // 2. Transforma caminhos absolutos em RELATIVOS (remove a barra inicial)
+            // Isso transforma "/build/assets/..." em "build/assets/..."
+            // E "/assets/imagem/..." em "assets/imagem/..."
+            $html = str_replace("=\"/build/", "=\"build/", $html);
+            $html = str_replace("=\"/assets/", "=\"assets/", $html);
+            
+            // 3. Caso o Vite use aspas simples no HTML:
+            $html = str_replace("=\047/build/", "=\047build/", $html);
+            $html = str_replace("=\047/assets/", "=\047assets/", $html);
 
             file_put_contents("public/index.html", $html);
           '
