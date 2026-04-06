@@ -35,8 +35,9 @@ jobs:
 
       - name: Render Blade to HTML 📄
         run: |
-          # Configuramos a APP_URL dinamicamente para o GitHub Pages
-          export APP_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          # Criamos um arquivo .env temporário para o Action não usar o seu local
+          echo "APP_URL=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" > .env
+          echo "ASSET_URL=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" >> .env
           
           php -r '
             include "vendor/autoload.php";
@@ -44,14 +45,13 @@ jobs:
             $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
             $kernel->bootstrap();
 
-            // Forçamos a URL base para evitar o localhost nas imagens/assets
-            url()->forceRootUrl(getenv("APP_URL"));
-
+            // Renderiza a view
             $html = view("welcome")->render(); 
             
-            // Se o seu projeto usa Vite, garantimos que o caminho do build seja relativo
+            // LIMPEZA TOTAL: Remove qualquer menção a localhost que tenha sobrado
+            // e remove a barra inicial para tornar os caminhos relativos
+            $html = str_replace("http://localhost/", "", $html);
             $html = str_replace("/build/", "build/", $html);
-            // Se você usa assets manuais na pasta assets/dist:
             $html = str_replace("/assets/", "assets/", $html);
 
             file_put_contents("public/index.html", $html);
