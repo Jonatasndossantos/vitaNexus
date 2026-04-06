@@ -1,11 +1,11 @@
-name: Deploy Blade Landing Page
+name: CI/CD VitaNexus Static
 
 on:
   push:
     branches: [ main ]
 
 permissions:
-  contents: write  # Permite que o bot crie a branch e faça push
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -14,55 +14,44 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
-      - name: Setup PHP 🐘
+      - name: Setup PHP & Node 🛠️
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, dom, fileinfo
-
-      - name: Install Composer Dependencies 📦
-        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-
-      - name: Setup Node.js ⚙️
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Compile Assets (Tailwind/Vite) 🎨
+      - name: Install & Build 🔧
         run: |
+          composer install --no-dev --prefer-dist
+          cp .env.example .env
+          php artisan key:generate
           npm install
           npm run build
 
-      - name: Render Blade to HTML 📄
+      - name: Static Export (The Magic) ✨
         run: |
-          php -r '
-            include "vendor/autoload.php";
-            $app = require_once "bootstrap/app.php";
-            $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
-            $kernel->bootstrap();
-
-            $html = view("welcome")->render(); 
-            
-            // 1. Remove qualquer URL absoluta (localhost ou github.io/repo)
-            // Isso transforma "https://.../build/assets/..." em "/build/assets/..."
-            $html = preg_replace("/https?:\/\/[^\/]+\/[^\/]+\//", "/", $html);
-            $html = str_replace("http://localhost/", "/", $html);
-
-            // 2. Transforma caminhos absolutos em RELATIVOS (remove a barra inicial)
-            // Isso transforma "/build/assets/..." em "build/assets/..."
-            // E "/assets/imagem/..." em "assets/imagem/..."
-            $html = str_replace("=\"/build/", "=\"build/", $html);
-            $html = str_replace("=\"/assets/", "=\"assets/", $html);
-            
-            // 3. Caso o Vite use aspas simples no HTML:
-            $html = str_replace("=\047/build/", "=\047build/", $html);
-            $html = str_replace("=\047/assets/", "=\047assets/", $html);
-
-            file_put_contents("public/index.html", $html);
-          '
+          # 1. Cria a pasta de saída
+          mkdir -p out
+          
+          # 2. Renderiza o Blade para index.html usando o CLI do Laravel
+          # Forçamos a URL para garantir que o helper asset() não use localhost
+          php artisan tinker --execute='echo view("welcome")->render()' > out/index.html
+          
+          # 3. Copia os assets compilados (Vite) e os estáticos (Imagens)
+          cp -r public/build out/
+          cp -r public/assets out/ 2>/dev/null || true # Ignora se não houver a pasta assets
+          
+          # 4. CORREÇÃO DE CAMINHOS (O segredo do 404)
+          # Removemos a barra inicial "/" de todos os links para torná-los relativos.
+          # Isso faz "/build/..." virar "build/..." e funcionar em qualquer subdiretório.
+          sed -i "s|=\"/build/|=\"build/|g" out/index.html
+          sed -i "s|=\"/assets/|=\"assets/|g" out/index.html
+          sed -i "s|=\"/|=\"|g" out/index.html # Remove barras de links root-relative
 
       - name: Deploy to GitHub Pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: public # O GitHub Pages vai servir o que estiver aqui
+          folder: out # Publica apenas a pasta que acabamos de montar
           branch: gh-pages
