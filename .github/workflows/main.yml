@@ -32,26 +32,35 @@ jobs:
 
       - name: Static Export (The Magic) ✨
         run: |
-          # 1. Cria a pasta de saída
           mkdir -p out
           
-          # 2. Renderiza o Blade para index.html usando o CLI do Laravel
-          # Forçamos a URL para garantir que o helper asset() não use localhost
+          # 1. Gera o HTML puro
           php artisan tinker --execute='echo view("welcome")->render()' > out/index.html
           
-          # 3. Copia os assets compilados (Vite) e os estáticos (Imagens)
-          cp -r public/build out/
-          cp -r public/assets out/ 2>/dev/null || true # Ignora se não houver a pasta assets
+          # 2. Copia as pastas EXATAMENTE como estão na sua public
+          # Se suas imagens estão em public/assets/imagem, elas vão para out/assets/imagem
+          cp -r public/build out/ 2>/dev/null || true
+          cp -r public/assets out/ 2>/dev/null || true
           
-          # 4. CORREÇÃO DE CAMINHOS (O segredo do 404)
-          # Removemos a barra inicial "/" de todos os links para torná-los relativos.
-          # Isso faz "/build/..." virar "build/..." e funcionar em qualquer subdiretório.
-          sed -i "s|=\"/build/|=\"build/|g" out/index.html
-          sed -i "s|=\"/assets/|=\"assets/|g" out/index.html
-          sed -i "s|=\"/|=\"|g" out/index.html # Remove barras de links root-relative
+          # 3. PADRONIZAÇÃO DE CAMINHOS (A "Marreta" Final)
+          # Removemos http://localhost
+          sed -i "s|http://localhost/||g" out/index.html
+          sed -i "s|http://localhost||g" out/index.html
+          
+          # Transforma caminhos que começam com / em caminhos relativos (remove a primeira barra)
+          # Ex: "/assets/..." vira "assets/..." | "/imagem/..." vira "imagem/..."
+          sed -i 's|src="/|src="|g' out/index.html
+          sed -i 's|href="/|href="|g' out/index.html
+          
+          # Corrige o erro do "../" - transforma "../../assets" ou "../assets" em "assets"
+          sed -i 's|\.\./assets/|assets/|g' out/index.html
+          
+          # Garante que o CSS do Vite (build) seja achado
+          # O Laravel costuma gerar /build/assets/... vamos garantir que vire build/assets/...
+          sed -i 's|build/assets/|build/assets/|g' out/index.html
 
       - name: Deploy to GitHub Pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: out # Publica apenas a pasta que acabamos de montar
+          folder: out
           branch: gh-pages
